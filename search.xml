@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Linux shell 中 2_&amp;1</title>
+    <url>/2023/08/07/Linux%20shell%20%E4%B8%AD%202_&amp;1/</url>
+    <content><![CDATA[<h3 id="1、在Linux系统中0-1-2是一个文件描述符："><a href="#1、在Linux系统中0-1-2是一个文件描述符：" class="headerlink" title="1、在Linux系统中0 1 2是一个文件描述符："></a>1、在Linux系统中0 1 2是一个文件描述符：</h3><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>代码</th>
+<th>操作符</th>
+<th>Java中表示</th>
+<th>Linux 下文件描述符（Debian 为例)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标准输入(stdin)</td>
+<td>0</td>
+<td>&lt; 或 &lt;&lt;</td>
+<td>System.in</td>
+<td>&#x2F;dev&#x2F;stdin -&gt; &#x2F;proc&#x2F;self&#x2F;fd&#x2F;0 -&gt; &#x2F;dev&#x2F;pts&#x2F;0</td>
+</tr>
+<tr>
+<td>标准输出(stdout)</td>
+<td>1</td>
+<td>&gt;, &gt;&gt;, 1&gt; 或 1&gt;&gt;</td>
+<td>System.out</td>
+<td>&#x2F;dev&#x2F;stdout -&gt; &#x2F;proc&#x2F;self&#x2F;fd&#x2F;1 -&gt; &#x2F;dev&#x2F;pts&#x2F;0</td>
+</tr>
+<tr>
+<td>标准错误输出(stderr)</td>
+<td>2</td>
+<td>2&gt; 或 2&gt;&gt;</td>
+<td>System.err</td>
+<td>&#x2F;dev&#x2F;stderr -&gt; &#x2F;proc&#x2F;self&#x2F;fd&#x2F;2 -&gt; &#x2F;dev&#x2F;pts&#x2F;0</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>例如：<br>nohup java -jar app.jar &gt;log 2&gt;&amp;1 &amp;</p>
+</blockquote>
+<blockquote>
+<p>简写：</p>
+<blockquote>
+<p>log 2&gt;&amp;1<br>&#x3D;&#x3D;&#x3D;》<br>&amp;&gt;log<br>或者<br>&amp;log</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>例如：<br>nohup java -jar app.jar &amp;&gt;log &amp;</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>shell</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>docker-compose之v1.x与v2.x说明</title>
     <url>/2023/07/29/docker-compose%E4%B9%8Bv1.x%E4%B8%8Ev2.x%E8%AF%B4%E6%98%8E/</url>
     <content><![CDATA[<h3 id="题外：centos-7-修改本地语言（解决中文显示异常乱码）"><a href="#题外：centos-7-修改本地语言（解决中文显示异常乱码）" class="headerlink" title="题外：centos 7 修改本地语言（解决中文显示异常乱码）"></a>题外：centos 7 修改本地语言（解决中文显示异常乱码）</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">centos7没有这个文件 /etc/sysconfig/i18n</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">locale ：查看当前系统的语言类型</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">lcoale -a ： 查看 当前系统所支持的所有语言类型！</span></span><br><span class="line">1、查看当前编码格式：</span><br><span class="line">root@localhost:~# locale</span><br><span class="line">LANG=en_US.UTF-8</span><br><span class="line">LC_CTYPE=&quot;en_US.UTF-8&quot;</span><br><span class="line">LC_NUMERIC=&quot;en_US.UTF-8&quot;</span><br><span class="line">...</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">或者</span></span><br><span class="line">root@localhost:~# echo $LANG</span><br><span class="line">en_US.UTF-8</span><br><span class="line"></span><br><span class="line">2、临时修改：(只是临时的，当重新打开一个终端即失效！)</span><br><span class="line">root@localhost:~# LANG=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">root@localhost:~# echo $LANG</span><br><span class="line">zh_CN.UTF-8</span><br><span class="line"></span><br><span class="line">3、永久修改：</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Centos 系统 ： /etc/locale.conf</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Ubuntu 系统 ： /etc/locale.gen</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">题外：</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看你的 /etc/profile.d/lang.sh 文件</span></span><br><span class="line"> 11   for langfile in /etc/locale.conf &quot;$HOME/.i18n&quot; ; do</span><br><span class="line"> 12         [ -f $langfile ] &amp;&amp; . $langfile &amp;&amp; sourced=1</span><br><span class="line"> 13     done</span><br><span class="line">：set nu</span><br><span class="line">看见没 ，上面有个路径 &quot;/etc/locale.conf&quot;  这个就是相当于 &quot;/etc/sysconfig/i18n&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">## 修改 /etc/locale.conf</span></span></span><br><span class="line">root@localhost:~# sed -ri &quot;s/LANG=en_US.UTF-8/LANG=zh_CN.UTF-8/&quot; /etc/locale.conf</span><br><span class="line">root@localhost:~# source /etc/locale.conf</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">## 检查</span></span></span><br><span class="line">root@localhost:~# echo &quot;哈喽&quot;</span><br><span class="line">哈喽</span><br></pre></td></tr></table></figure>
@@ -43,6 +98,107 @@
       </categories>
       <tags>
         <tag>工具</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mongodb的查询指令find的简单应用</title>
+    <url>/2023/08/10/mongodb%E7%9A%84%E6%9F%A5%E8%AF%A2%E6%8C%87%E4%BB%A4find%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="简单查找全部"><a href="#简单查找全部" class="headerlink" title="简单查找全部"></a>简单查找全部</h2><blockquote>
+<p>查询全部条数</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find() / db.find(&#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="字段条件简单查找"><a href="#字段条件简单查找" class="headerlink" title="字段条件简单查找"></a>字段条件简单查找</h2><blockquote>
+<p>条件查找age为10的字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:10&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="字段的筛选"><a href="#字段的筛选" class="headerlink" title="字段的筛选"></a>字段的筛选</h2><blockquote>
+<p>查找全部条数，并且值保留age字段，会自带_id字段，因为数据库的默认添加</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>去掉_id字段，只保留age字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;_id:0,age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>过滤掉age与sex字段，保留剩余字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:0,sex:0&#125;) </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>只保留age与sex字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1,sex:1&#125;) </span><br></pre></td></tr></table></figure>
+
+<p><strong>注意，除了_id字段之外，其余字段不可以在有字段为1的情况下设置为0</strong></p>
+<h2 id="条件查找"><a href="#条件查找" class="headerlink" title="条件查找"></a>条件查找</h2><blockquote>
+<p><strong>符号</strong></p>
+<p>gt  大于<br>lt 小于<br>gte 大于等于<br>lte 小于等于</p>
+</blockquote>
+<blockquote>
+<p>查找当前文档中age字段大于等于20的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$gte</span>:20&#125;&#125;) </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找文档中age字段小于20的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$lt</span>:20&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="多条件查找"><a href="#多条件查找" class="headerlink" title="多条件查找"></a>多条件查找</h2><p><strong>符号</strong></p>
+<p><strong>and 且 (他用于模糊条件且)</strong></p>
+<blockquote>
+<p>查询文档中age字段大于5且age字段小于20的信息</p>
+<p>语法 $and:[条件1,条件2,…]</p>
+<p>他是直接查询符合数组所有条件的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;<span class="variable">$and</span>:[&#123;age:&#123;<span class="variable">$gte</span>:5&#125;&#125;,&#123;age:&#123;<span class="variable">$lte</span>:20&#125;&#125;]&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>$in 存在</strong></p>
+<blockquote>
+<p>他用于精准匹配值，类似枚举</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;age:&#123;<span class="variable">$in</span>:[1,2,3,5,7]&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>$or 或</strong></p>
+<blockquote>
+<p>db.user.find({KaTeX parse error: Expected ‘}’, got ‘EOF’ at end of input: or:[{age:{lte:5}},{age:{$gte:10}}]})</p>
+<p>只要符合给定条件中的一个，就匹配成功</p>
+</blockquote>
+<p><strong>regex 正则查找</strong></p>
+<p>db.user.find({name:&#x2F;3&#x2F;i}) 正则查找name字段中含有’3’的字符串</p>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><blockquote>
+<p>根据字段对信息进行排序</p>
+<p>要先查找到数据在进行排序操作，根据age字段进行升序排序，-1为降序排序。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">sort</span>(&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="跳过与查找个数"><a href="#跳过与查找个数" class="headerlink" title="跳过与查找个数"></a>跳过与查找个数</h2><p><strong>count 数量</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().count()</span><br></pre></td></tr></table></figure>
+
+<p><strong>skip 跳过</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().skip(4)</span><br></pre></td></tr></table></figure>
+
+<p><strong>limit 查找信息数量</strong></p>
+<blockquote>
+<p>它规定只查找几条</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">limit</span>(3)</span><br></pre></td></tr></table></figure>
+
+<h2 id="查找信息自增"><a href="#查找信息自增" class="headerlink" title="查找信息自增"></a>查找信息自增</h2><p><strong>$inc 字段自增</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.updateOne(&#123;name:<span class="string">&#x27;ceshi10&#x27;</span>&#125;,&#123;<span class="variable">$inc</span>:&#123;age:1&#125;&#125;) 查询到信息，age字段随着每次更新自增</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>mongodb</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -454,61 +610,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Linux shell 中 2_&amp;1</title>
-    <url>/2023/08/07/Linux%20shell%20%E4%B8%AD%202_&amp;1/</url>
-    <content><![CDATA[<h3 id="1、在Linux系统中0-1-2是一个文件描述符："><a href="#1、在Linux系统中0-1-2是一个文件描述符：" class="headerlink" title="1、在Linux系统中0 1 2是一个文件描述符："></a>1、在Linux系统中0 1 2是一个文件描述符：</h3><table>
-<thead>
-<tr>
-<th>名称</th>
-<th>代码</th>
-<th>操作符</th>
-<th>Java中表示</th>
-<th>Linux 下文件描述符（Debian 为例)</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>标准输入(stdin)</td>
-<td>0</td>
-<td>&lt; 或 &lt;&lt;</td>
-<td>System.in</td>
-<td>&#x2F;dev&#x2F;stdin -&gt; &#x2F;proc&#x2F;self&#x2F;fd&#x2F;0 -&gt; &#x2F;dev&#x2F;pts&#x2F;0</td>
-</tr>
-<tr>
-<td>标准输出(stdout)</td>
-<td>1</td>
-<td>&gt;, &gt;&gt;, 1&gt; 或 1&gt;&gt;</td>
-<td>System.out</td>
-<td>&#x2F;dev&#x2F;stdout -&gt; &#x2F;proc&#x2F;self&#x2F;fd&#x2F;1 -&gt; &#x2F;dev&#x2F;pts&#x2F;0</td>
-</tr>
-<tr>
-<td>标准错误输出(stderr)</td>
-<td>2</td>
-<td>2&gt; 或 2&gt;&gt;</td>
-<td>System.err</td>
-<td>&#x2F;dev&#x2F;stderr -&gt; &#x2F;proc&#x2F;self&#x2F;fd&#x2F;2 -&gt; &#x2F;dev&#x2F;pts&#x2F;0</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>例如：<br>nohup java -jar app.jar &gt;log 2&gt;&amp;1 &amp;</p>
-</blockquote>
-<blockquote>
-<p>简写：</p>
-<blockquote>
-<p>log 2&gt;&amp;1<br>&#x3D;&#x3D;&#x3D;》<br>&amp;&gt;log<br>或者<br>&amp;log</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<p>例如：<br>nohup java -jar app.jar &amp;&gt;log &amp;</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>shell</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>vsftp之docker版</title>
     <url>/2023/08/24/vsftp%E4%B9%8Bdocker%E7%89%88/</url>
     <content><![CDATA[<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>服务器参数：</p>
@@ -605,107 +706,6 @@
       </categories>
       <tags>
         <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mongodb的查询指令find的简单应用</title>
-    <url>/2023/08/10/mongodb%E7%9A%84%E6%9F%A5%E8%AF%A2%E6%8C%87%E4%BB%A4find%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="简单查找全部"><a href="#简单查找全部" class="headerlink" title="简单查找全部"></a>简单查找全部</h2><blockquote>
-<p>查询全部条数</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find() / db.find(&#123;&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="字段条件简单查找"><a href="#字段条件简单查找" class="headerlink" title="字段条件简单查找"></a>字段条件简单查找</h2><blockquote>
-<p>条件查找age为10的字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:10&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="字段的筛选"><a href="#字段的筛选" class="headerlink" title="字段的筛选"></a>字段的筛选</h2><blockquote>
-<p>查找全部条数，并且值保留age字段，会自带_id字段，因为数据库的默认添加</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>去掉_id字段，只保留age字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;_id:0,age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>过滤掉age与sex字段，保留剩余字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:0,sex:0&#125;) </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>只保留age与sex字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1,sex:1&#125;) </span><br></pre></td></tr></table></figure>
-
-<p><strong>注意，除了_id字段之外，其余字段不可以在有字段为1的情况下设置为0</strong></p>
-<h2 id="条件查找"><a href="#条件查找" class="headerlink" title="条件查找"></a>条件查找</h2><blockquote>
-<p><strong>符号</strong></p>
-<p>gt  大于<br>lt 小于<br>gte 大于等于<br>lte 小于等于</p>
-</blockquote>
-<blockquote>
-<p>查找当前文档中age字段大于等于20的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$gte</span>:20&#125;&#125;) </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>查找文档中age字段小于20的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$lt</span>:20&#125;&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="多条件查找"><a href="#多条件查找" class="headerlink" title="多条件查找"></a>多条件查找</h2><p><strong>符号</strong></p>
-<p><strong>and 且 (他用于模糊条件且)</strong></p>
-<blockquote>
-<p>查询文档中age字段大于5且age字段小于20的信息</p>
-<p>语法 $and:[条件1,条件2,…]</p>
-<p>他是直接查询符合数组所有条件的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;<span class="variable">$and</span>:[&#123;age:&#123;<span class="variable">$gte</span>:5&#125;&#125;,&#123;age:&#123;<span class="variable">$lte</span>:20&#125;&#125;]&#125;)</span><br></pre></td></tr></table></figure>
-
-<p><strong>$in 存在</strong></p>
-<blockquote>
-<p>他用于精准匹配值，类似枚举</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;age:&#123;<span class="variable">$in</span>:[1,2,3,5,7]&#125;&#125;)</span><br></pre></td></tr></table></figure>
-
-<p><strong>$or 或</strong></p>
-<blockquote>
-<p>db.user.find({KaTeX parse error: Expected ‘}’, got ‘EOF’ at end of input: or:[{age:{lte:5}},{age:{$gte:10}}]})</p>
-<p>只要符合给定条件中的一个，就匹配成功</p>
-</blockquote>
-<p><strong>regex 正则查找</strong></p>
-<p>db.user.find({name:&#x2F;3&#x2F;i}) 正则查找name字段中含有’3’的字符串</p>
-<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><blockquote>
-<p>根据字段对信息进行排序</p>
-<p>要先查找到数据在进行排序操作，根据age字段进行升序排序，-1为降序排序。</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">sort</span>(&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="跳过与查找个数"><a href="#跳过与查找个数" class="headerlink" title="跳过与查找个数"></a>跳过与查找个数</h2><p><strong>count 数量</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().count()</span><br></pre></td></tr></table></figure>
-
-<p><strong>skip 跳过</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().skip(4)</span><br></pre></td></tr></table></figure>
-
-<p><strong>limit 查找信息数量</strong></p>
-<blockquote>
-<p>它规定只查找几条</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">limit</span>(3)</span><br></pre></td></tr></table></figure>
-
-<h2 id="查找信息自增"><a href="#查找信息自增" class="headerlink" title="查找信息自增"></a>查找信息自增</h2><p><strong>$inc 字段自增</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.updateOne(&#123;name:<span class="string">&#x27;ceshi10&#x27;</span>&#125;,&#123;<span class="variable">$inc</span>:&#123;age:1&#125;&#125;) 查询到信息，age字段随着每次更新自增</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>mongodb</category>
-      </categories>
-      <tags>
-        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
