@@ -386,54 +386,6 @@
       </tags>
   </entry>
   <entry>
-    <title>制作Ubuntu16.04离线apt源</title>
-    <url>/2023/08/08/%E5%88%B6%E4%BD%9CUbuntu16.04%E7%A6%BB%E7%BA%BFapt%E6%BA%90/</url>
-    <content><![CDATA[<h3 id="制作Ubuntu16-04离线apt源"><a href="#制作Ubuntu16-04离线apt源" class="headerlink" title="制作Ubuntu16.04离线apt源"></a>制作Ubuntu16.04离线apt源</h3><h4 id="1-下载离线安装包"><a href="#1-下载离线安装包" class="headerlink" title="1.下载离线安装包"></a>1.下载离线安装包</h4><blockquote>
-<p>ubuntu下安装包都会下载到&#x2F;var&#x2F;cache&#x2F;apt&#x2F;archives下，首先清空该目录</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get clean</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载需要安装包</span></span><br><span class="line">sudo apt-get install -d XX</span><br><span class="line"><span class="comment"># -d：代表只下载不安装，但是如果该机器上已经有该软件，则不会执行</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="2-安装dpkg-dev"><a href="#2-安装dpkg-dev" class="headerlink" title="2.安装dpkg-dev"></a>2.安装dpkg-dev</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install dpkg-dev</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-创建源目录"><a href="#3-创建源目录" class="headerlink" title="3.创建源目录"></a>3.创建源目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> /XX</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-拷贝离线包到源目录"><a href="#4-拷贝离线包到源目录" class="headerlink" title="4.拷贝离线包到源目录"></a>4.拷贝离线包到源目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> /var/cache/apt/archives/*.deb /XX</span><br></pre></td></tr></table></figure>
-
-<h4 id="5-为离线安装包制作索引"><a href="#5-为离线安装包制作索引" class="headerlink" title="5.为离线安装包制作索引"></a>5.为离线安装包制作索引</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line">sudo dpkg-scanpackages XX/ |gzip &gt;XX/Packages.gz </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>运行完该命令后会在XX目录生成Packages.gz</p>
-</blockquote>
-<h4 id="6-将索引加入source-list"><a href="#6-将索引加入source-list" class="headerlink" title="6.将索引加入source.list"></a>6.将索引加入source.list</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> “deb file:/// XX/”&gt;&gt;/etc/apt/source.list</span><br></pre></td></tr></table></figure>
-
-<h4 id="7-更新源"><a href="#7-更新源" class="headerlink" title="7.更新源"></a>7.更新源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
-
-<h4 id="8-安装XX"><a href="#8-安装XX" class="headerlink" title="8.安装XX"></a>8.安装XX</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install XX</span><br></pre></td></tr></table></figure>
-
-<h4 id="9、其他"><a href="#9、其他" class="headerlink" title="9、其他"></a>9、其他</h4><ul>
-<li>apt-get install 连同诸多依赖包一并安装</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get install --install-suggests package</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果遇到个别包的版本兼容问题，具体如下</li>
-</ul>
-<blockquote>
-<p>Depends: XXX（&#x3D;YYY） but ZZZ is to be installed</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 例如：</span></span><br><span class="line">zlib1g (= 1:1.2.8.dfsg-2ubuntu4.3) but 1:1.2.11.dfsg-0ubuntu2 is to be installed</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决方法：</span></span><br><span class="line">apt-get install --reinstall zlib1g=1:1.2.8.dfsg-2ubuntu4.3</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>ubuntu/debian</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>k8s 1.26.2基于containerd1.6.18</title>
     <url>/2023/07/29/k8s%201.26.2%E5%9F%BA%E4%BA%8Econtainerd1.6.18/</url>
     <content><![CDATA[<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>服务器参数：</p>
@@ -513,6 +465,54 @@
       </categories>
       <tags>
         <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>制作Ubuntu16.04离线apt源</title>
+    <url>/2023/08/08/%E5%88%B6%E4%BD%9CUbuntu16.04%E7%A6%BB%E7%BA%BFapt%E6%BA%90/</url>
+    <content><![CDATA[<h3 id="制作Ubuntu16-04离线apt源"><a href="#制作Ubuntu16-04离线apt源" class="headerlink" title="制作Ubuntu16.04离线apt源"></a>制作Ubuntu16.04离线apt源</h3><h4 id="1-下载离线安装包"><a href="#1-下载离线安装包" class="headerlink" title="1.下载离线安装包"></a>1.下载离线安装包</h4><blockquote>
+<p>ubuntu下安装包都会下载到&#x2F;var&#x2F;cache&#x2F;apt&#x2F;archives下，首先清空该目录</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get clean</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载需要安装包</span></span><br><span class="line">sudo apt-get install -d XX</span><br><span class="line"><span class="comment"># -d：代表只下载不安装，但是如果该机器上已经有该软件，则不会执行</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-安装dpkg-dev"><a href="#2-安装dpkg-dev" class="headerlink" title="2.安装dpkg-dev"></a>2.安装dpkg-dev</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install dpkg-dev</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-创建源目录"><a href="#3-创建源目录" class="headerlink" title="3.创建源目录"></a>3.创建源目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> /XX</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-拷贝离线包到源目录"><a href="#4-拷贝离线包到源目录" class="headerlink" title="4.拷贝离线包到源目录"></a>4.拷贝离线包到源目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> /var/cache/apt/archives/*.deb /XX</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-为离线安装包制作索引"><a href="#5-为离线安装包制作索引" class="headerlink" title="5.为离线安装包制作索引"></a>5.为离线安装包制作索引</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line">sudo dpkg-scanpackages XX/ |gzip &gt;XX/Packages.gz </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>运行完该命令后会在XX目录生成Packages.gz</p>
+</blockquote>
+<h4 id="6-将索引加入source-list"><a href="#6-将索引加入source-list" class="headerlink" title="6.将索引加入source.list"></a>6.将索引加入source.list</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> “deb file:/// XX/”&gt;&gt;/etc/apt/source.list</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-更新源"><a href="#7-更新源" class="headerlink" title="7.更新源"></a>7.更新源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-安装XX"><a href="#8-安装XX" class="headerlink" title="8.安装XX"></a>8.安装XX</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install XX</span><br></pre></td></tr></table></figure>
+
+<h4 id="9、其他"><a href="#9、其他" class="headerlink" title="9、其他"></a>9、其他</h4><ul>
+<li>apt-get install 连同诸多依赖包一并安装</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get install --install-suggests package</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果遇到个别包的版本兼容问题，具体如下</li>
+</ul>
+<blockquote>
+<p>Depends: XXX（&#x3D;YYY） but ZZZ is to be installed</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 例如：</span></span><br><span class="line">zlib1g (= 1:1.2.8.dfsg-2ubuntu4.3) but 1:1.2.11.dfsg-0ubuntu2 is to be installed</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决方法：</span></span><br><span class="line">apt-get install --reinstall zlib1g=1:1.2.8.dfsg-2ubuntu4.3</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>ubuntu/debian</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
