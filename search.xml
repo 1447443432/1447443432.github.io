@@ -56,6 +56,43 @@
       </tags>
   </entry>
   <entry>
+    <title>MinIO客户端mc实现数据迁移_minio数据迁移</title>
+    <url>/2023/10/23/MinIO%E5%AE%A2%E6%88%B7%E7%AB%AFmc%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB_minio%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</url>
+    <content><![CDATA[<h3 id="一-概述"><a href="#一-概述" class="headerlink" title="一.概述"></a>一.概述</h3><p>mc 命令提供了一个方便管理 ~&#x2F;.mc&#x2F;config.json 配置文件中的主机信息的方式，你也可以用文本编辑器手动修改这个配置文件。<br>通过minio提供的客户端实现资源迁移，本文章的mc通过docker创建。<br>minio1的api地址是192.168.180.45:39000<br>minio2的api地址是192.168.180.37:39000</p>
+<h3 id="二-docker启动mc实例-并进入容器内部"><a href="#二-docker启动mc实例-并进入容器内部" class="headerlink" title="二.docker启动mc实例,并进入容器内部"></a>二.docker启动mc实例,并进入容器内部</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -it --entrypoint=/bin/sh minio/mc </span><br></pre></td></tr></table></figure>
+
+<h3 id="三-通过mc命令连接两个minio服务"><a href="#三-通过mc命令连接两个minio服务" class="headerlink" title="三.通过mc命令连接两个minio服务"></a>三.通过mc命令连接两个minio服务</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#查看cat ~/.mc/config.json里的配置</span><br><span class="line">mc config host ls</span><br><span class="line">#添加新的minio服务地址</span><br><span class="line">mc alias set 名称 服务地址 用户名 密码</span><br><span class="line">mc alias set minio1 http://192.168.180.45:39000 admin Qwe@1245</span><br><span class="line">mc alias set minio2 http://192.168.180.37:39000 admin Qwe@1245 </span><br></pre></td></tr></table></figure>
+
+<h3 id="四-迁移数据"><a href="#四-迁移数据" class="headerlink" title="四.迁移数据"></a>四.迁移数据</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#全量迁移,重名文件不覆盖,bucket不存在会自动创建</span><br><span class="line">mc mirror minio1 minio2</span><br><span class="line">#只是迁移某个bucket,以test为例,目标的bucket需要提前建好</span><br><span class="line">mc mirror minio1/test minio2/test</span><br><span class="line">#覆盖重名文件,加--overwrite</span><br><span class="line">mc mirror --overwrite minio1/test minio2/test </span><br></pre></td></tr></table></figure>
+
+<h3 id="五、其他命令"><a href="#五、其他命令" class="headerlink" title="五、其他命令"></a>五、其他命令</h3><p><strong><a href="http://docs.minio.org.cn/docs/master/minio-client-complete-guide"><code>mc命令详解</code></a></strong></p>
+<p>MinIO Client (mc)为ls，cat，cp，mirror，diff，find等UNIX命令提供了一种替代方案。它支持文件系统和兼容Amazon S3的云存储服务（AWS Signature v2和v4）。</p>
+<blockquote>
+<p>Copyls 列出文件和文件夹。<br>mb 创建一个存储桶或一个文件夹。<br>cat 显示文件和对象内容。<br>pipe 将一个STDIN重定向到一个对象或者文件或者STDOUT。<br>share 生成用于共享的URL。<br>cp 拷贝文件和对象。<br>mirror 给存储桶和文件夹做镜像。<br>find 基于参数查找文件。<br>diff 对两个文件夹或者存储桶比较差异。<br>rm 删除文件和对象。<br>events 管理对象通知。<br>watch 监听文件和对象的事件。<br>policy 管理访问策略。<br>session 为cp命令管理保存的会话。<br>config 管理mc配置文件。<br>update 检查软件更新。<br>version 输出版本信息。</p>
+</blockquote>
+<p><strong><code>获取集群信息</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行命令测试能否连通，如有文件或至少存在一个 Bucket，会在回显中列出：</span><br><span class="line">mc ls minio1</span><br><span class="line"></span><br><span class="line"># 执行命令获取集群数据大小，如果有文件或存在至少一个 Bucket，会在最后一行打印当前集群所有文件总大小：</span><br><span class="line">mc du minio1 </span><br></pre></td></tr></table></figure>
+
+<p><strong><code>对拷（镜像）</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#使用命令进行 Bucket 对拷,mc 无法实现集群全量对拷，单条命令只能逐个 Bucket 进行操作：</span><br><span class="line">mc mirror $SrcCluster/$srcBucket $DestCluster</span><br><span class="line">#例如：</span><br><span class="line">mc mirror clusterA/bucketa clusterB</span><br><span class="line">mc mirror 命令可以不指定 Dest 的 Bucket，如果 $DestCluster 不存在对应名称 Bucket，对拷过程中会自动创建。</span><br><span class="line"></span><br><span class="line">#若要实现不停机对拷，可以使用以下命令：</span><br><span class="line">mc mirror -w $srcCluster/Bucket $destCluster</span><br><span class="line">#-w 参数可以让 mirror 命令持续监控某一目录。由于 mirror 只能对拷单Bucket，如果使用 Shell 脚本进行for 轮询实现集群对拷时，一旦Bucket 过多，此命令可能会造成大量监控线程，增加负载。 </span><br></pre></td></tr></table></figure>
+
+<p><strong><code>检查是否完全结束</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#使用命令检查是否有未完整传输的文件,如果有未传输完全的文件，会在回显中列出：</span><br><span class="line">mc ls --incomplete minio1</span><br><span class="line"></span><br><span class="line">#如果有必要，可以删除某个桶中的残缺文件：</span><br><span class="line">mc rm --incomplete $hostName/$bucket </span><br></pre></td></tr></table></figure>
+
+<h3 id="一些说明"><a href="#一些说明" class="headerlink" title="一些说明"></a>一些说明</h3><p>无需担心数据分片等问题，哪怕节点数量不对等。</p>
+<p>因为是直接从集群入口访问并获取数据，并不是 ”磁盘 to 磁盘“ 的迁移方式，某个节点上的某块磁盘究竟存的是纠删码还是分片的数据都没有关系，因为从集群地址中读出来的数据是完整的数据，这就是为什么要求一定要能获取到集群地址的原因。</p>
+<p>Bucket 在 MinIO 中应被视为 ”挂载目录“ (mount)，而不是 “磁盘目录” (mkdir)。</p>
+<p>mc cp 命令需要在目标集群拥有同名 Bucket，mc mirror 不需要，同时 mc mirror 会自动保存目录的层级信息，mc cp 需要额外指定 –recursive 参数，请根据需要酌情选择。</p>
+<p>mc mirror 的集群 to 集群、集群 to 本地用法并未在 官方文档 中列出，很可能属于 hack 用法，请注意可能存在的风险。</p>
+]]></content>
+      <categories>
+        <category>minio - mc命令</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Xshell7 &amp; Xftp7 个人免费版安装教程（许可弹窗解决）</title>
     <url>/2023/08/07/Xshell7%20&amp;%20Xftp7%20%E4%B8%AA%E4%BA%BA%E5%85%8D%E8%B4%B9%E7%89%88%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B%EF%BC%88%E8%AE%B8%E5%8F%AF%E5%BC%B9%E7%AA%97%E8%A7%A3%E5%86%B3%EF%BC%89/</url>
     <content><![CDATA[<blockquote>
@@ -95,43 +132,6 @@
 ]]></content>
       <categories>
         <category>docker compose</category>
-      </categories>
-      <tags>
-        <tag>运维</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>MinIO客户端mc实现数据迁移_minio数据迁移</title>
-    <url>/2023/10/23/MinIO%E5%AE%A2%E6%88%B7%E7%AB%AFmc%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB_minio%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</url>
-    <content><![CDATA[<h3 id="一-概述"><a href="#一-概述" class="headerlink" title="一.概述"></a>一.概述</h3><p>mc 命令提供了一个方便管理 ~&#x2F;.mc&#x2F;config.json 配置文件中的主机信息的方式，你也可以用文本编辑器手动修改这个配置文件。<br>通过minio提供的客户端实现资源迁移，本文章的mc通过docker创建。<br>minio1的api地址是192.168.180.45:39000<br>minio2的api地址是192.168.180.37:39000</p>
-<h3 id="二-docker启动mc实例-并进入容器内部"><a href="#二-docker启动mc实例-并进入容器内部" class="headerlink" title="二.docker启动mc实例,并进入容器内部"></a>二.docker启动mc实例,并进入容器内部</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -it --entrypoint=/bin/sh minio/mc </span><br></pre></td></tr></table></figure>
-
-<h3 id="三-通过mc命令连接两个minio服务"><a href="#三-通过mc命令连接两个minio服务" class="headerlink" title="三.通过mc命令连接两个minio服务"></a>三.通过mc命令连接两个minio服务</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#查看cat ~/.mc/config.json里的配置</span><br><span class="line">mc config host ls</span><br><span class="line">#添加新的minio服务地址</span><br><span class="line">mc alias set 名称 服务地址 用户名 密码</span><br><span class="line">mc alias set minio1 http://192.168.180.45:39000 admin Qwe@1245</span><br><span class="line">mc alias set minio2 http://192.168.180.37:39000 admin Qwe@1245 </span><br></pre></td></tr></table></figure>
-
-<h3 id="四-迁移数据"><a href="#四-迁移数据" class="headerlink" title="四.迁移数据"></a>四.迁移数据</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#全量迁移,重名文件不覆盖,bucket不存在会自动创建</span><br><span class="line">mc mirror minio1 minio2</span><br><span class="line">#只是迁移某个bucket,以test为例,目标的bucket需要提前建好</span><br><span class="line">mc mirror minio1/test minio2/test</span><br><span class="line">#覆盖重名文件,加--overwrite</span><br><span class="line">mc mirror --overwrite minio1/test minio2/test </span><br></pre></td></tr></table></figure>
-
-<h3 id="五、其他命令"><a href="#五、其他命令" class="headerlink" title="五、其他命令"></a>五、其他命令</h3><p><strong><a href="http://docs.minio.org.cn/docs/master/minio-client-complete-guide"><code>mc命令详解</code></a></strong></p>
-<p>MinIO Client (mc)为ls，cat，cp，mirror，diff，find等UNIX命令提供了一种替代方案。它支持文件系统和兼容Amazon S3的云存储服务（AWS Signature v2和v4）。</p>
-<blockquote>
-<p>Copyls 列出文件和文件夹。<br>mb 创建一个存储桶或一个文件夹。<br>cat 显示文件和对象内容。<br>pipe 将一个STDIN重定向到一个对象或者文件或者STDOUT。<br>share 生成用于共享的URL。<br>cp 拷贝文件和对象。<br>mirror 给存储桶和文件夹做镜像。<br>find 基于参数查找文件。<br>diff 对两个文件夹或者存储桶比较差异。<br>rm 删除文件和对象。<br>events 管理对象通知。<br>watch 监听文件和对象的事件。<br>policy 管理访问策略。<br>session 为cp命令管理保存的会话。<br>config 管理mc配置文件。<br>update 检查软件更新。<br>version 输出版本信息。</p>
-</blockquote>
-<p><strong><code>获取集群信息</code></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行命令测试能否连通，如有文件或至少存在一个 Bucket，会在回显中列出：</span><br><span class="line">mc ls minio1</span><br><span class="line"></span><br><span class="line"># 执行命令获取集群数据大小，如果有文件或存在至少一个 Bucket，会在最后一行打印当前集群所有文件总大小：</span><br><span class="line">mc du minio1 </span><br></pre></td></tr></table></figure>
-
-<p><strong><code>对拷（镜像）</code></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#使用命令进行 Bucket 对拷,mc 无法实现集群全量对拷，单条命令只能逐个 Bucket 进行操作：</span><br><span class="line">mc mirror $SrcCluster/$srcBucket $DestCluster</span><br><span class="line">#例如：</span><br><span class="line">mc mirror clusterA/bucketa clusterB</span><br><span class="line">mc mirror 命令可以不指定 Dest 的 Bucket，如果 $DestCluster 不存在对应名称 Bucket，对拷过程中会自动创建。</span><br><span class="line"></span><br><span class="line">#若要实现不停机对拷，可以使用以下命令：</span><br><span class="line">mc mirror -w $srcCluster/Bucket $destCluster</span><br><span class="line">#-w 参数可以让 mirror 命令持续监控某一目录。由于 mirror 只能对拷单Bucket，如果使用 Shell 脚本进行for 轮询实现集群对拷时，一旦Bucket 过多，此命令可能会造成大量监控线程，增加负载。 </span><br></pre></td></tr></table></figure>
-
-<p><strong><code>检查是否完全结束</code></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#使用命令检查是否有未完整传输的文件,如果有未传输完全的文件，会在回显中列出：</span><br><span class="line">mc ls --incomplete minio1</span><br><span class="line"></span><br><span class="line">#如果有必要，可以删除某个桶中的残缺文件：</span><br><span class="line">mc rm --incomplete $hostName/$bucket </span><br></pre></td></tr></table></figure>
-
-<h3 id="一些说明"><a href="#一些说明" class="headerlink" title="一些说明"></a>一些说明</h3><p>无需担心数据分片等问题，哪怕节点数量不对等。</p>
-<p>因为是直接从集群入口访问并获取数据，并不是 ”磁盘 to 磁盘“ 的迁移方式，某个节点上的某块磁盘究竟存的是纠删码还是分片的数据都没有关系，因为从集群地址中读出来的数据是完整的数据，这就是为什么要求一定要能获取到集群地址的原因。</p>
-<p>Bucket 在 MinIO 中应被视为 ”挂载目录“ (mount)，而不是 “磁盘目录” (mkdir)。</p>
-<p>mc cp 命令需要在目标集群拥有同名 Bucket，mc mirror 不需要，同时 mc mirror 会自动保存目录的层级信息，mc cp 需要额外指定 –recursive 参数，请根据需要酌情选择。</p>
-<p>mc mirror 的集群 to 集群、集群 to 本地用法并未在 官方文档 中列出，很可能属于 hack 用法，请注意可能存在的风险。</p>
-]]></content>
-      <categories>
-        <category>minio - mc命令</category>
       </categories>
       <tags>
         <tag>运维</tag>
@@ -206,6 +206,107 @@
       </categories>
       <tags>
         <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mongodb的查询指令find的简单应用</title>
+    <url>/2023/08/10/mongodb%E7%9A%84%E6%9F%A5%E8%AF%A2%E6%8C%87%E4%BB%A4find%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="简单查找全部"><a href="#简单查找全部" class="headerlink" title="简单查找全部"></a>简单查找全部</h2><blockquote>
+<p>查询全部条数</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find() / db.find(&#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="字段条件简单查找"><a href="#字段条件简单查找" class="headerlink" title="字段条件简单查找"></a>字段条件简单查找</h2><blockquote>
+<p>条件查找age为10的字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:10&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="字段的筛选"><a href="#字段的筛选" class="headerlink" title="字段的筛选"></a>字段的筛选</h2><blockquote>
+<p>查找全部条数，并且值保留age字段，会自带_id字段，因为数据库的默认添加</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>去掉_id字段，只保留age字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;_id:0,age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>过滤掉age与sex字段，保留剩余字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:0,sex:0&#125;) </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>只保留age与sex字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1,sex:1&#125;) </span><br></pre></td></tr></table></figure>
+
+<p><strong>注意，除了_id字段之外，其余字段不可以在有字段为1的情况下设置为0</strong></p>
+<h2 id="条件查找"><a href="#条件查找" class="headerlink" title="条件查找"></a>条件查找</h2><blockquote>
+<p><strong>符号</strong></p>
+<p>gt  大于<br>lt 小于<br>gte 大于等于<br>lte 小于等于</p>
+</blockquote>
+<blockquote>
+<p>查找当前文档中age字段大于等于20的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$gte</span>:20&#125;&#125;) </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找文档中age字段小于20的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$lt</span>:20&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="多条件查找"><a href="#多条件查找" class="headerlink" title="多条件查找"></a>多条件查找</h2><p><strong>符号</strong></p>
+<p><strong>and 且 (他用于模糊条件且)</strong></p>
+<blockquote>
+<p>查询文档中age字段大于5且age字段小于20的信息</p>
+<p>语法 $and:[条件1,条件2,…]</p>
+<p>他是直接查询符合数组所有条件的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;<span class="variable">$and</span>:[&#123;age:&#123;<span class="variable">$gte</span>:5&#125;&#125;,&#123;age:&#123;<span class="variable">$lte</span>:20&#125;&#125;]&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>$in 存在</strong></p>
+<blockquote>
+<p>他用于精准匹配值，类似枚举</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;age:&#123;<span class="variable">$in</span>:[1,2,3,5,7]&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>$or 或</strong></p>
+<blockquote>
+<p>db.user.find({KaTeX parse error: Expected ‘}’, got ‘EOF’ at end of input: or:[{age:{lte:5}},{age:{$gte:10}}]})</p>
+<p>只要符合给定条件中的一个，就匹配成功</p>
+</blockquote>
+<p><strong>regex 正则查找</strong></p>
+<p>db.user.find({name:&#x2F;3&#x2F;i}) 正则查找name字段中含有’3’的字符串</p>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><blockquote>
+<p>根据字段对信息进行排序</p>
+<p>要先查找到数据在进行排序操作，根据age字段进行升序排序，-1为降序排序。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">sort</span>(&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="跳过与查找个数"><a href="#跳过与查找个数" class="headerlink" title="跳过与查找个数"></a>跳过与查找个数</h2><p><strong>count 数量</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().count()</span><br></pre></td></tr></table></figure>
+
+<p><strong>skip 跳过</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().skip(4)</span><br></pre></td></tr></table></figure>
+
+<p><strong>limit 查找信息数量</strong></p>
+<blockquote>
+<p>它规定只查找几条</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">limit</span>(3)</span><br></pre></td></tr></table></figure>
+
+<h2 id="查找信息自增"><a href="#查找信息自增" class="headerlink" title="查找信息自增"></a>查找信息自增</h2><p><strong>$inc 字段自增</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.updateOne(&#123;name:<span class="string">&#x27;ceshi10&#x27;</span>&#125;,&#123;<span class="variable">$inc</span>:&#123;age:1&#125;&#125;) 查询到信息，age字段随着每次更新自增</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>mongodb</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -330,107 +431,6 @@
       </categories>
       <tags>
         <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mongodb的查询指令find的简单应用</title>
-    <url>/2023/08/10/mongodb%E7%9A%84%E6%9F%A5%E8%AF%A2%E6%8C%87%E4%BB%A4find%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="简单查找全部"><a href="#简单查找全部" class="headerlink" title="简单查找全部"></a>简单查找全部</h2><blockquote>
-<p>查询全部条数</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find() / db.find(&#123;&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="字段条件简单查找"><a href="#字段条件简单查找" class="headerlink" title="字段条件简单查找"></a>字段条件简单查找</h2><blockquote>
-<p>条件查找age为10的字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:10&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="字段的筛选"><a href="#字段的筛选" class="headerlink" title="字段的筛选"></a>字段的筛选</h2><blockquote>
-<p>查找全部条数，并且值保留age字段，会自带_id字段，因为数据库的默认添加</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>去掉_id字段，只保留age字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;_id:0,age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>过滤掉age与sex字段，保留剩余字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:0,sex:0&#125;) </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>只保留age与sex字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1,sex:1&#125;) </span><br></pre></td></tr></table></figure>
-
-<p><strong>注意，除了_id字段之外，其余字段不可以在有字段为1的情况下设置为0</strong></p>
-<h2 id="条件查找"><a href="#条件查找" class="headerlink" title="条件查找"></a>条件查找</h2><blockquote>
-<p><strong>符号</strong></p>
-<p>gt  大于<br>lt 小于<br>gte 大于等于<br>lte 小于等于</p>
-</blockquote>
-<blockquote>
-<p>查找当前文档中age字段大于等于20的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$gte</span>:20&#125;&#125;) </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>查找文档中age字段小于20的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$lt</span>:20&#125;&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="多条件查找"><a href="#多条件查找" class="headerlink" title="多条件查找"></a>多条件查找</h2><p><strong>符号</strong></p>
-<p><strong>and 且 (他用于模糊条件且)</strong></p>
-<blockquote>
-<p>查询文档中age字段大于5且age字段小于20的信息</p>
-<p>语法 $and:[条件1,条件2,…]</p>
-<p>他是直接查询符合数组所有条件的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;<span class="variable">$and</span>:[&#123;age:&#123;<span class="variable">$gte</span>:5&#125;&#125;,&#123;age:&#123;<span class="variable">$lte</span>:20&#125;&#125;]&#125;)</span><br></pre></td></tr></table></figure>
-
-<p><strong>$in 存在</strong></p>
-<blockquote>
-<p>他用于精准匹配值，类似枚举</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;age:&#123;<span class="variable">$in</span>:[1,2,3,5,7]&#125;&#125;)</span><br></pre></td></tr></table></figure>
-
-<p><strong>$or 或</strong></p>
-<blockquote>
-<p>db.user.find({KaTeX parse error: Expected ‘}’, got ‘EOF’ at end of input: or:[{age:{lte:5}},{age:{$gte:10}}]})</p>
-<p>只要符合给定条件中的一个，就匹配成功</p>
-</blockquote>
-<p><strong>regex 正则查找</strong></p>
-<p>db.user.find({name:&#x2F;3&#x2F;i}) 正则查找name字段中含有’3’的字符串</p>
-<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><blockquote>
-<p>根据字段对信息进行排序</p>
-<p>要先查找到数据在进行排序操作，根据age字段进行升序排序，-1为降序排序。</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">sort</span>(&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="跳过与查找个数"><a href="#跳过与查找个数" class="headerlink" title="跳过与查找个数"></a>跳过与查找个数</h2><p><strong>count 数量</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().count()</span><br></pre></td></tr></table></figure>
-
-<p><strong>skip 跳过</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().skip(4)</span><br></pre></td></tr></table></figure>
-
-<p><strong>limit 查找信息数量</strong></p>
-<blockquote>
-<p>它规定只查找几条</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">limit</span>(3)</span><br></pre></td></tr></table></figure>
-
-<h2 id="查找信息自增"><a href="#查找信息自增" class="headerlink" title="查找信息自增"></a>查找信息自增</h2><p><strong>$inc 字段自增</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.updateOne(&#123;name:<span class="string">&#x27;ceshi10&#x27;</span>&#125;,&#123;<span class="variable">$inc</span>:&#123;age:1&#125;&#125;) 查询到信息，age字段随着每次更新自增</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>mongodb</category>
-      </categories>
-      <tags>
-        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
