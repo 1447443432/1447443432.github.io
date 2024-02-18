@@ -93,6 +93,32 @@
       </tags>
   </entry>
   <entry>
+    <title>Xshell7 &amp; Xftp7 个人免费版安装教程（许可弹窗解决）</title>
+    <url>/2023/08/07/Xshell7%20&amp;%20Xftp7%20%E4%B8%AA%E4%BA%BA%E5%85%8D%E8%B4%B9%E7%89%88%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B%EF%BC%88%E8%AE%B8%E5%8F%AF%E5%BC%B9%E7%AA%97%E8%A7%A3%E5%86%B3%EF%BC%89/</url>
+    <content><![CDATA[<blockquote>
+<p>官网下载：<a href="https://www.xshell.com/zh/xshell-download/">https://www.xshell.com/zh/xshell-download/</a></p>
+</blockquote>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><blockquote>
+<p>Xshell 和 Xftp 对家庭和学校用户提供免费许可证，个人可以免费使用（非商业），没有选项卡限制，商用需购买许可证哦。<br>需要准备一个可用的邮箱，如果没有邮箱也没关系，可以使用<a href="https://www.linshi-email.com/">临时邮箱</a>，有时不太稳定，需要多试几次。<br>这里可以选择下载 Xshell 或 Xftp ，根据自己需要下载，也可以两者都下载。点击下载会将下载链接发送到你填写的邮箱，点击链接下载（如链接不可点击，可以复制到浏览器的地址栏下载）下载完直接安装下一步即可。</p>
+</blockquote>
+<h1 id="弹窗解决（可选）"><a href="#弹窗解决（可选）" class="headerlink" title="弹窗解决（可选）"></a>弹窗解决（可选）</h1><blockquote>
+<p>个人免费版启动关闭后会有个人免费许可说明弹窗，这个弹窗可以手动关闭，它也会自动关闭，但每次启动关闭都会有，就很烦~毕竟是提供的个人免费使用，所以能接受弹窗的话也没关系，如果不能接受，可以尝试下面的方法哦。</p>
+</blockquote>
+<p><strong>方式一：</strong> 使用火绒（或其他）弹窗拦截（拦截可能会闪一下）<br><strong>方式二：</strong> 汇编反编译</p>
+<blockquote>
+<p>在线编译器：<a href="https://hexed.it/">HexEd.it</a><br><a href="https://hexed.it/">https://hexed.it/</a></p>
+</blockquote>
+<p><strong>步骤：</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">1、打开文件：找到 Xshell 或 Xftp 安装目录下的.exe文件，然后打开</span><br><span class="line"></span><br><span class="line">2、搜索替换：根据 Xshell 或 Xftp 分别搜索替换</span><br><span class="line">Xshell：搜索 74 11 6A 00 6A 07 6A 01 替换为 EB 11 6A 00 6A 07 6A 01</span><br><span class="line">Xftp：搜索 75 10 6A 00 6A 07 50 6A 替换为 EB 10 6A 00 6A 07 50 6A</span><br><span class="line"></span><br><span class="line">先输入搜索的内容，然后查找下一个，找到后，输入替换为的内容，最后点击替换。</span><br><span class="line"></span><br><span class="line">3、另存为：将修改后的文件另存到原来安装的目录，替换原有的.exe文件</span><br><span class="line"></span><br><span class="line">操作后，重新启动软件，会提示是否允许运行，点击仍要允许（刚开始可能会有点慢），</span><br><span class="line">再关闭后就发现没有弹窗提示了，完美解决。</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>xshell</category>
+      </categories>
+      <tags>
+        <tag>工具</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux系统实时数据同步inotify+rsync</title>
     <url>/2023/08/29/Linux%E7%B3%BB%E7%BB%9F%E5%AE%9E%E6%97%B6%E6%95%B0%E6%8D%AE%E5%90%8C%E6%AD%A5inotify+rsync/</url>
     <content><![CDATA[<h3 id="一、inotify简介"><a href="#一、inotify简介" class="headerlink" title="一、inotify简介"></a>一、inotify简介</h3><p>　　inotify是Linux内核的一个功能，它能监控文件系统的变化，比如删除、读、写和卸载等操作。它监控到这些事件的发生后会默认往标准输出打印事件信息。要使用inotify，Linux内核版本必须是大于2.6.13，在这之前的内核都没有这个功能。我们可以利用inotify去监控我们要监控的资源，当资源发生变化时，我们扑捉它的事件，从而触发同步数据等操作。</p>
@@ -233,32 +259,6 @@
       </categories>
       <tags>
         <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Xshell7 &amp; Xftp7 个人免费版安装教程（许可弹窗解决）</title>
-    <url>/2023/08/07/Xshell7%20&amp;%20Xftp7%20%E4%B8%AA%E4%BA%BA%E5%85%8D%E8%B4%B9%E7%89%88%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B%EF%BC%88%E8%AE%B8%E5%8F%AF%E5%BC%B9%E7%AA%97%E8%A7%A3%E5%86%B3%EF%BC%89/</url>
-    <content><![CDATA[<blockquote>
-<p>官网下载：<a href="https://www.xshell.com/zh/xshell-download/">https://www.xshell.com/zh/xshell-download/</a></p>
-</blockquote>
-<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><blockquote>
-<p>Xshell 和 Xftp 对家庭和学校用户提供免费许可证，个人可以免费使用（非商业），没有选项卡限制，商用需购买许可证哦。<br>需要准备一个可用的邮箱，如果没有邮箱也没关系，可以使用<a href="https://www.linshi-email.com/">临时邮箱</a>，有时不太稳定，需要多试几次。<br>这里可以选择下载 Xshell 或 Xftp ，根据自己需要下载，也可以两者都下载。点击下载会将下载链接发送到你填写的邮箱，点击链接下载（如链接不可点击，可以复制到浏览器的地址栏下载）下载完直接安装下一步即可。</p>
-</blockquote>
-<h1 id="弹窗解决（可选）"><a href="#弹窗解决（可选）" class="headerlink" title="弹窗解决（可选）"></a>弹窗解决（可选）</h1><blockquote>
-<p>个人免费版启动关闭后会有个人免费许可说明弹窗，这个弹窗可以手动关闭，它也会自动关闭，但每次启动关闭都会有，就很烦~毕竟是提供的个人免费使用，所以能接受弹窗的话也没关系，如果不能接受，可以尝试下面的方法哦。</p>
-</blockquote>
-<p><strong>方式一：</strong> 使用火绒（或其他）弹窗拦截（拦截可能会闪一下）<br><strong>方式二：</strong> 汇编反编译</p>
-<blockquote>
-<p>在线编译器：<a href="https://hexed.it/">HexEd.it</a><br><a href="https://hexed.it/">https://hexed.it/</a></p>
-</blockquote>
-<p><strong>步骤：</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">1、打开文件：找到 Xshell 或 Xftp 安装目录下的.exe文件，然后打开</span><br><span class="line"></span><br><span class="line">2、搜索替换：根据 Xshell 或 Xftp 分别搜索替换</span><br><span class="line">Xshell：搜索 74 11 6A 00 6A 07 6A 01 替换为 EB 11 6A 00 6A 07 6A 01</span><br><span class="line">Xftp：搜索 75 10 6A 00 6A 07 50 6A 替换为 EB 10 6A 00 6A 07 50 6A</span><br><span class="line"></span><br><span class="line">先输入搜索的内容，然后查找下一个，找到后，输入替换为的内容，最后点击替换。</span><br><span class="line"></span><br><span class="line">3、另存为：将修改后的文件另存到原来安装的目录，替换原有的.exe文件</span><br><span class="line"></span><br><span class="line">操作后，重新启动软件，会提示是否允许运行，点击仍要允许（刚开始可能会有点慢），</span><br><span class="line">再关闭后就发现没有弹窗提示了，完美解决。</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>xshell</category>
-      </categories>
-      <tags>
-        <tag>工具</tag>
       </tags>
   </entry>
   <entry>
