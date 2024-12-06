@@ -56,40 +56,29 @@
       </tags>
   </entry>
   <entry>
-    <title>MinIO客户端mc实现数据迁移_minio数据迁移</title>
-    <url>/2023/10/23/MinIO%E5%AE%A2%E6%88%B7%E7%AB%AFmc%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB_minio%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</url>
-    <content><![CDATA[<h3 id="一-概述"><a href="#一-概述" class="headerlink" title="一.概述"></a>一.概述</h3><p>mc 命令提供了一个方便管理 ~&#x2F;.mc&#x2F;config.json 配置文件中的主机信息的方式，你也可以用文本编辑器手动修改这个配置文件。<br>通过minio提供的客户端实现资源迁移，本文章的mc通过docker创建。<br>minio1的api地址是192.168.180.45:39000<br>minio2的api地址是192.168.180.37:39000</p>
-<h3 id="二-docker启动mc实例-并进入容器内部"><a href="#二-docker启动mc实例-并进入容器内部" class="headerlink" title="二.docker启动mc实例,并进入容器内部"></a>二.docker启动mc实例,并进入容器内部</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -it --entrypoint=/bin/sh minio/mc </span><br></pre></td></tr></table></figure>
-
-<h3 id="三-通过mc命令连接两个minio服务"><a href="#三-通过mc命令连接两个minio服务" class="headerlink" title="三.通过mc命令连接两个minio服务"></a>三.通过mc命令连接两个minio服务</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#查看cat ~/.mc/config.json里的配置</span><br><span class="line">mc config host ls</span><br><span class="line">#添加新的minio服务地址</span><br><span class="line">mc alias set 名称 服务地址 用户名 密码</span><br><span class="line">mc alias set minio1 http://192.168.180.45:39000 admin Qwe@1245</span><br><span class="line">mc alias set minio2 http://192.168.180.37:39000 admin Qwe@1245 </span><br></pre></td></tr></table></figure>
-
-<h3 id="四-迁移数据"><a href="#四-迁移数据" class="headerlink" title="四.迁移数据"></a>四.迁移数据</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#全量迁移,重名文件不覆盖,bucket不存在会自动创建</span><br><span class="line">mc mirror minio1 minio2</span><br><span class="line">#只是迁移某个bucket,以test为例,目标的bucket需要提前建好</span><br><span class="line">mc mirror minio1/test minio2/test</span><br><span class="line">#覆盖重名文件,加--overwrite</span><br><span class="line">mc mirror --overwrite minio1/test minio2/test </span><br></pre></td></tr></table></figure>
-
-<h3 id="五、其他命令"><a href="#五、其他命令" class="headerlink" title="五、其他命令"></a>五、其他命令</h3><p><strong><a href="http://docs.minio.org.cn/docs/master/minio-client-complete-guide"><code>mc命令详解</code></a></strong></p>
-<p>MinIO Client (mc)为ls，cat，cp，mirror，diff，find等UNIX命令提供了一种替代方案。它支持文件系统和兼容Amazon S3的云存储服务（AWS Signature v2和v4）。</p>
-<blockquote>
-<p>Copyls 列出文件和文件夹。<br>mb 创建一个存储桶或一个文件夹。<br>cat 显示文件和对象内容。<br>pipe 将一个STDIN重定向到一个对象或者文件或者STDOUT。<br>share 生成用于共享的URL。<br>cp 拷贝文件和对象。<br>mirror 给存储桶和文件夹做镜像。<br>find 基于参数查找文件。<br>diff 对两个文件夹或者存储桶比较差异。<br>rm 删除文件和对象。<br>events 管理对象通知。<br>watch 监听文件和对象的事件。<br>policy 管理访问策略。<br>session 为cp命令管理保存的会话。<br>config 管理mc配置文件。<br>update 检查软件更新。<br>version 输出版本信息。</p>
+    <title>Xshell7 &amp; Xftp7 个人免费版安装教程（许可弹窗解决）</title>
+    <url>/2023/08/07/Xshell7%20&amp;%20Xftp7%20%E4%B8%AA%E4%BA%BA%E5%85%8D%E8%B4%B9%E7%89%88%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B%EF%BC%88%E8%AE%B8%E5%8F%AF%E5%BC%B9%E7%AA%97%E8%A7%A3%E5%86%B3%EF%BC%89/</url>
+    <content><![CDATA[<blockquote>
+<p>官网下载：<a href="https://www.xshell.com/zh/xshell-download/">https://www.xshell.com/zh/xshell-download/</a></p>
 </blockquote>
-<p><strong><code>获取集群信息</code></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行命令测试能否连通，如有文件或至少存在一个 Bucket，会在回显中列出：</span><br><span class="line">mc ls minio1</span><br><span class="line"></span><br><span class="line"># 执行命令获取集群数据大小，如果有文件或存在至少一个 Bucket，会在最后一行打印当前集群所有文件总大小：</span><br><span class="line">mc du minio1 </span><br></pre></td></tr></table></figure>
-
-<p><strong><code>对拷（镜像）</code></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#使用命令进行 Bucket 对拷,mc 无法实现集群全量对拷，单条命令只能逐个 Bucket 进行操作：</span><br><span class="line">mc mirror $SrcCluster/$srcBucket $DestCluster</span><br><span class="line">#例如：</span><br><span class="line">mc mirror clusterA/bucketa clusterB</span><br><span class="line">mc mirror 命令可以不指定 Dest 的 Bucket，如果 $DestCluster 不存在对应名称 Bucket，对拷过程中会自动创建。</span><br><span class="line"></span><br><span class="line">#若要实现不停机对拷，可以使用以下命令：</span><br><span class="line">mc mirror -w $srcCluster/Bucket $destCluster</span><br><span class="line">#-w 参数可以让 mirror 命令持续监控某一目录。由于 mirror 只能对拷单Bucket，如果使用 Shell 脚本进行for 轮询实现集群对拷时，一旦Bucket 过多，此命令可能会造成大量监控线程，增加负载。 </span><br></pre></td></tr></table></figure>
-
-<p><strong><code>检查是否完全结束</code></strong></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#使用命令检查是否有未完整传输的文件,如果有未传输完全的文件，会在回显中列出：</span><br><span class="line">mc ls --incomplete minio1</span><br><span class="line"></span><br><span class="line">#如果有必要，可以删除某个桶中的残缺文件：</span><br><span class="line">mc rm --incomplete $hostName/$bucket </span><br></pre></td></tr></table></figure>
-
-<h3 id="一些说明"><a href="#一些说明" class="headerlink" title="一些说明"></a>一些说明</h3><p>无需担心数据分片等问题，哪怕节点数量不对等。</p>
-<p>因为是直接从集群入口访问并获取数据，并不是 ”磁盘 to 磁盘“ 的迁移方式，某个节点上的某块磁盘究竟存的是纠删码还是分片的数据都没有关系，因为从集群地址中读出来的数据是完整的数据，这就是为什么要求一定要能获取到集群地址的原因。</p>
-<p>Bucket 在 MinIO 中应被视为 ”挂载目录“ (mount)，而不是 “磁盘目录” (mkdir)。</p>
-<p>mc cp 命令需要在目标集群拥有同名 Bucket，mc mirror 不需要，同时 mc mirror 会自动保存目录的层级信息，mc cp 需要额外指定 –recursive 参数，请根据需要酌情选择。</p>
-<p>mc mirror 的集群 to 集群、集群 to 本地用法并未在 官方文档 中列出，很可能属于 hack 用法，请注意可能存在的风险。</p>
+<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><blockquote>
+<p>Xshell 和 Xftp 对家庭和学校用户提供免费许可证，个人可以免费使用（非商业），没有选项卡限制，商用需购买许可证哦。<br>需要准备一个可用的邮箱，如果没有邮箱也没关系，可以使用<a href="https://www.linshi-email.com/">临时邮箱</a>，有时不太稳定，需要多试几次。<br>这里可以选择下载 Xshell 或 Xftp ，根据自己需要下载，也可以两者都下载。点击下载会将下载链接发送到你填写的邮箱，点击链接下载（如链接不可点击，可以复制到浏览器的地址栏下载）下载完直接安装下一步即可。</p>
+</blockquote>
+<h1 id="弹窗解决（可选）"><a href="#弹窗解决（可选）" class="headerlink" title="弹窗解决（可选）"></a>弹窗解决（可选）</h1><blockquote>
+<p>个人免费版启动关闭后会有个人免费许可说明弹窗，这个弹窗可以手动关闭，它也会自动关闭，但每次启动关闭都会有，就很烦~毕竟是提供的个人免费使用，所以能接受弹窗的话也没关系，如果不能接受，可以尝试下面的方法哦。</p>
+</blockquote>
+<p><strong>方式一：</strong> 使用火绒（或其他）弹窗拦截（拦截可能会闪一下）<br><strong>方式二：</strong> 汇编反编译</p>
+<blockquote>
+<p>在线编译器：<a href="https://hexed.it/">HexEd.it</a><br><a href="https://hexed.it/">https://hexed.it/</a></p>
+</blockquote>
+<p><strong>步骤：</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">1、打开文件：找到 Xshell 或 Xftp 安装目录下的.exe文件，然后打开</span><br><span class="line"></span><br><span class="line">2、搜索替换：根据 Xshell 或 Xftp 分别搜索替换</span><br><span class="line">Xshell：搜索 74 11 6A 00 6A 07 6A 01 替换为 EB 11 6A 00 6A 07 6A 01</span><br><span class="line">Xftp：搜索 75 10 6A 00 6A 07 50 6A 替换为 EB 10 6A 00 6A 07 50 6A</span><br><span class="line"></span><br><span class="line">先输入搜索的内容，然后查找下一个，找到后，输入替换为的内容，最后点击替换。</span><br><span class="line"></span><br><span class="line">3、另存为：将修改后的文件另存到原来安装的目录，替换原有的.exe文件</span><br><span class="line"></span><br><span class="line">操作后，重新启动软件，会提示是否允许运行，点击仍要允许（刚开始可能会有点慢），</span><br><span class="line">再关闭后就发现没有弹窗提示了，完美解决。</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>minio - mc命令</category>
+        <category>xshell</category>
       </categories>
       <tags>
-        <tag>运维</tag>
+        <tag>工具</tag>
       </tags>
   </entry>
   <entry>
@@ -236,149 +225,74 @@
       </tags>
   </entry>
   <entry>
-    <title>docker-compose之v1.x与v2.x说明</title>
-    <url>/2023/07/29/docker-compose%E4%B9%8Bv1.x%E4%B8%8Ev2.x%E8%AF%B4%E6%98%8E/</url>
-    <content><![CDATA[<h3 id="题外：centos-7-修改本地语言（解决中文显示异常乱码）"><a href="#题外：centos-7-修改本地语言（解决中文显示异常乱码）" class="headerlink" title="题外：centos 7 修改本地语言（解决中文显示异常乱码）"></a>题外：centos 7 修改本地语言（解决中文显示异常乱码）</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">centos7没有这个文件 /etc/sysconfig/i18n</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">locale ：查看当前系统的语言类型</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">lcoale -a ： 查看 当前系统所支持的所有语言类型！</span></span><br><span class="line">1、查看当前编码格式：</span><br><span class="line">root@localhost:~# locale</span><br><span class="line">LANG=en_US.UTF-8</span><br><span class="line">LC_CTYPE=&quot;en_US.UTF-8&quot;</span><br><span class="line">LC_NUMERIC=&quot;en_US.UTF-8&quot;</span><br><span class="line">...</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">或者</span></span><br><span class="line">root@localhost:~# echo $LANG</span><br><span class="line">en_US.UTF-8</span><br><span class="line"></span><br><span class="line">2、临时修改：(只是临时的，当重新打开一个终端即失效！)</span><br><span class="line">root@localhost:~# LANG=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">root@localhost:~# echo $LANG</span><br><span class="line">zh_CN.UTF-8</span><br><span class="line"></span><br><span class="line">3、永久修改：</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Centos 系统 ： /etc/locale.conf</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Ubuntu 系统 ： /etc/locale.gen</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">题外：</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看你的 /etc/profile.d/lang.sh 文件</span></span><br><span class="line"> 11   for langfile in /etc/locale.conf &quot;$HOME/.i18n&quot; ; do</span><br><span class="line"> 12         [ -f $langfile ] &amp;&amp; . $langfile &amp;&amp; sourced=1</span><br><span class="line"> 13     done</span><br><span class="line">：set nu</span><br><span class="line">看见没 ，上面有个路径 &quot;/etc/locale.conf&quot;  这个就是相当于 &quot;/etc/sysconfig/i18n&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">## 修改 /etc/locale.conf</span></span></span><br><span class="line">root@localhost:~# sed -ri &quot;s/LANG=en_US.UTF-8/LANG=zh_CN.UTF-8/&quot; /etc/locale.conf</span><br><span class="line">root@localhost:~# source /etc/locale.conf</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">## 检查</span></span></span><br><span class="line">root@localhost:~# echo &quot;哈喽&quot;</span><br><span class="line">哈喽</span><br></pre></td></tr></table></figure>
-<h3 id="一、docker-compose-v1-x"><a href="#一、docker-compose-v1-x" class="headerlink" title="一、docker-compose v1.x"></a>一、docker-compose v1.x</h3><h5 id="1、docker-compose1-x-是相对独立的命令，命令行方式如：docker-compose-–version"><a href="#1、docker-compose1-x-是相对独立的命令，命令行方式如：docker-compose-–version" class="headerlink" title="1、docker compose1.x 是相对独立的命令，命令行方式如：docker-compose –version"></a>1、docker compose1.x 是相对独立的命令，命令行方式如：docker-compose –version</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载docker-compose</span></span><br><span class="line">curl -kL https://github.com/docker/compose/releases/download/v1.25.4/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加入执行权限</span></span><br><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">添加环境</span></span><br><span class="line">cat &gt;&gt; /etc/profile &lt; EOF</span><br><span class="line">export $PATH=$PATH:/usr/local/bin</span><br><span class="line">EOF</span><br><span class="line">source /etc/profile</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看docker-compose版本</span></span><br><span class="line">docker-compose -v</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">离线下载</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">到github release中下载我们的docker-compose</span></span><br><span class="line">https://github.com/docker/compose/releases</span><br></pre></td></tr></table></figure>
-<h3 id="二、docker-compose-v2-x"><a href="#二、docker-compose-v2-x" class="headerlink" title="二、docker-compose v2.x"></a>二、docker-compose v2.x</h3><h5 id="1、docker-compose-v2-被规划为Docker-CLI的一部分，命令行方式如docker-compose-version"><a href="#1、docker-compose-v2-被规划为Docker-CLI的一部分，命令行方式如docker-compose-version" class="headerlink" title="1、docker compose v2 被规划为Docker CLI的一部分，命令行方式如docker compose version"></a>1、docker compose v2 被规划为Docker CLI的一部分，命令行方式如docker compose version</h5><ul>
-<li><strong>注意docker与compose之间是空格，不是中横线；version 作为一个命令存在，而不是参数</strong></li>
-<li>在Mac和windows操作系统中，docker compose已经是docker CLI的一部分，也就是在安装docker的时候，就具备了执行docker compose的能力。</li>
-<li>在linux版本下，需要我们来安装一下，安装过程其实是差不多的。<strong>注意的是必须安装到指定的目录下，才能被Docker CLI识别，以Docker CLI命令模式运行。</strong><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">法一：命令是：docker-compose，安装类似v1.x</span><br><span class="line"></span><br><span class="line">法二：命令是：docker compose</span><br><span class="line">mkdir -p ~/.docker/cli-plugins</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载docker-compose</span></span><br><span class="line">curl -kL https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-`uname -s`-`uname -m` &gt; ~/.docker/cli-plugins/docker-compose</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加入执行权限</span></span><br><span class="line">chmod +x ~/.docker/cli-plugins/docker-compose</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看版本</span></span><br><span class="line">docker compose version</span><br></pre></td></tr></table></figure>
-<!-- <meta http-equiv="refresh" content="2"> --></li>
-</ul>
+    <title>k8s中使用nfs创建storageClass</title>
+    <url>/2023/10/23/k8s%E4%B8%AD%E4%BD%BF%E7%94%A8nfs%E5%88%9B%E5%BB%BAstorageClass/</url>
+    <content><![CDATA[<h1 id="k8s中使用nfs创建storageClass"><a href="#k8s中使用nfs创建storageClass" class="headerlink" title="k8s中使用nfs创建storageClass"></a>k8s中使用nfs创建storageClass</h1><p>k8s环境配置</p>
+<table>
+<thead>
+<tr>
+<th>服务器</th>
+<th>角色</th>
+<th>版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>11.0.1.10</td>
+<td>master</td>
+<td>v1.24.0</td>
+</tr>
+<tr>
+<td>11.0.1.11</td>
+<td>worker</td>
+<td>v1.24.0</td>
+</tr>
+<tr>
+<td>11.0.1.12</td>
+<td>worker</td>
+<td>v1.24.0</td>
+</tr>
+<tr>
+<td>11.0.1.13</td>
+<td>nfs</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="安装nfs服务器"><a href="#安装nfs服务器" class="headerlink" title="安装nfs服务器"></a>安装nfs服务器</h3><p>11.0.1.13</p>
+<p>安装nfs服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install -y nfs-utils </span><br></pre></td></tr></table></figure>
+
+<p>配置nfs &#x2F;etc&#x2F;exports</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/nfs *(rw,<span class="built_in">sync</span>) </span><br></pre></td></tr></table></figure>
+
+<p>设置目录权限777</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 777 /nfs </span><br></pre></td></tr></table></figure>
+
+<p>重启服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart nfs </span><br></pre></td></tr></table></figure>
+
+<p>在其他服务器上也要安装nfs-utils</p>
+<h3 id="在k8s中安装nfs组件"><a href="#在k8s中安装nfs组件" class="headerlink" title="在k8s中安装nfs组件"></a>在k8s中安装nfs组件</h3><p>NFS subdir external provisioner 是一个存储资源自动调配器，它可用将现有的 NFS 服务器通过持久卷声明来支持 Kubernetes 持久卷的动态分配</p>
+<p>组件地址：<a href="https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/deploy">https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/deploy</a></p>
+<h4 id="创建rabc-yaml"><a href="#创建rabc-yaml" class="headerlink" title="创建rabc.yaml"></a>创建rabc.yaml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">rabc.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">  <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client-provisioner-runner</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;nodes&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;persistentvolumes&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>, <span class="string">&quot;create&quot;</span>, <span class="string">&quot;delete&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;persistentvolumeclaims&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>, <span class="string">&quot;update&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;storage.k8s.io&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;storageclasses&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;events&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;create&quot;</span>, <span class="string">&quot;update&quot;</span>, <span class="string">&quot;patch&quot;</span>]</span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">run-nfs-client-provisioner</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">    <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client-provisioner-runner</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line">  <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;endpoints&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>, <span class="string">&quot;create&quot;</span>, <span class="string">&quot;update&quot;</span>, <span class="string">&quot;patch&quot;</span>]</span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">RoleBinding</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line">  <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">    <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl apply -f rabc.yaml </span><br></pre></td></tr></table></figure>
+
+<h4 id="创建deployment-provisioner-yaml"><a href="#创建deployment-provisioner-yaml" class="headerlink" title="创建deployment-provisioner.yaml"></a>创建deployment-provisioner.yaml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">deployment-provisioner.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">  <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">Recreate</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">serviceAccountName:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">          <span class="comment"># 镜像地址国内访问不到，需要更换为其他地址</span></span><br><span class="line">          <span class="comment">#image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">willdockerhub/nfs-subdir-external-provisioner:v4.0.2</span></span><br><span class="line">          <span class="attr">volumeMounts:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-client-root</span></span><br><span class="line">              <span class="attr">mountPath:</span> <span class="string">/persistentvolumes</span></span><br><span class="line">          <span class="attr">env:</span></span><br><span class="line">              <span class="comment"># provisioner的名字，可以自定义，要和class.yaml中保持一致</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">PROVISIONER_NAME</span></span><br><span class="line">              <span class="attr">value:</span> <span class="string">k8s-sigs.io/nfs-subdir-external-provisioner</span></span><br><span class="line">              <span class="comment"># nfs服务器的地址</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NFS_SERVER</span></span><br><span class="line">              <span class="attr">value:</span> <span class="number">11.0</span><span class="number">.1</span><span class="number">.13</span></span><br><span class="line">              <span class="comment"># nfs共享的目录</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NFS_PATH</span></span><br><span class="line">              <span class="attr">value:</span> <span class="string">/nfs</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-client-root</span></span><br><span class="line">          <span class="attr">nfs:</span></span><br><span class="line">            <span class="comment"># nfs服务器的地址</span></span><br><span class="line">            <span class="attr">server:</span> <span class="number">11.0</span><span class="number">.1</span><span class="number">.13</span></span><br><span class="line">            <span class="comment"># nfs共享的目录</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">/nfs</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl apply -f deployment-provisioner.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># kubectl get pod </span></span><br><span class="line">NAME                                      READY   STATUS    RESTARTS        AGE</span><br><span class="line">nfs-client-provisioner-5bd7d76d8f-nrcgj   1/1     Running   1 (4h48m ago)   20h </span><br></pre></td></tr></table></figure>
+
+<h4 id="创建storageclass-yaml"><a href="#创建storageclass-yaml" class="headerlink" title="创建storageclass.yaml"></a>创建storageclass.yaml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">storageclass.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">storage.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StorageClass</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client</span></span><br><span class="line"><span class="comment"># provisioner名称要和deployment里面定义的保持一致</span></span><br><span class="line"><span class="attr">provisioner:</span> <span class="string">k8s-sigs.io/nfs-subdir-external-provisioner</span> </span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line">  <span class="attr">archiveOnDelete:</span> <span class="string">&quot;false&quot;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl apply -f storageclass.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># kubectl get storageclass</span></span><br><span class="line">NAME          PROVISIONER                                   RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE</span><br><span class="line">nfs-client    k8s-sigs.io/nfs-subdir-external-provisioner   Delete          Immediate           <span class="literal">false</span>                  2d2h </span><br></pre></td></tr></table></figure>
+
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>创建pvc</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">pvc-test.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-claim</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">storageClassName:</span> <span class="string">nfs-client</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">ReadWriteMany</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">    <span class="attr">requests:</span></span><br><span class="line">      <span class="attr">storage:</span> <span class="string">1Mi</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<p>创建pod，挂载pvc</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">pod-test.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-pod</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox:stable</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;/bin/sh&quot;</span></span><br><span class="line">    <span class="attr">args:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;-c&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;touch /mnt/SUCCESS &amp;&amp; exit 0 || exit 1&quot;</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-pvc</span></span><br><span class="line">        <span class="attr">mountPath:</span> <span class="string">&quot;/mnt&quot;</span></span><br><span class="line">  <span class="attr">restartPolicy:</span> <span class="string">&quot;Never&quot;</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-pvc</span></span><br><span class="line">      <span class="attr">persistentVolumeClaim:</span></span><br><span class="line">        <span class="attr">claimName:</span> <span class="string">test-claim</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>docker compose</category>
+        <category>kubernetes-k8s存储storageClass</category>
       </categories>
       <tags>
         <tag>运维</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Xshell7 &amp; Xftp7 个人免费版安装教程（许可弹窗解决）</title>
-    <url>/2023/08/07/Xshell7%20&amp;%20Xftp7%20%E4%B8%AA%E4%BA%BA%E5%85%8D%E8%B4%B9%E7%89%88%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B%EF%BC%88%E8%AE%B8%E5%8F%AF%E5%BC%B9%E7%AA%97%E8%A7%A3%E5%86%B3%EF%BC%89/</url>
-    <content><![CDATA[<blockquote>
-<p>官网下载：<a href="https://www.xshell.com/zh/xshell-download/">https://www.xshell.com/zh/xshell-download/</a></p>
-</blockquote>
-<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><blockquote>
-<p>Xshell 和 Xftp 对家庭和学校用户提供免费许可证，个人可以免费使用（非商业），没有选项卡限制，商用需购买许可证哦。<br>需要准备一个可用的邮箱，如果没有邮箱也没关系，可以使用<a href="https://www.linshi-email.com/">临时邮箱</a>，有时不太稳定，需要多试几次。<br>这里可以选择下载 Xshell 或 Xftp ，根据自己需要下载，也可以两者都下载。点击下载会将下载链接发送到你填写的邮箱，点击链接下载（如链接不可点击，可以复制到浏览器的地址栏下载）下载完直接安装下一步即可。</p>
-</blockquote>
-<h1 id="弹窗解决（可选）"><a href="#弹窗解决（可选）" class="headerlink" title="弹窗解决（可选）"></a>弹窗解决（可选）</h1><blockquote>
-<p>个人免费版启动关闭后会有个人免费许可说明弹窗，这个弹窗可以手动关闭，它也会自动关闭，但每次启动关闭都会有，就很烦~毕竟是提供的个人免费使用，所以能接受弹窗的话也没关系，如果不能接受，可以尝试下面的方法哦。</p>
-</blockquote>
-<p><strong>方式一：</strong> 使用火绒（或其他）弹窗拦截（拦截可能会闪一下）<br><strong>方式二：</strong> 汇编反编译</p>
-<blockquote>
-<p>在线编译器：<a href="https://hexed.it/">HexEd.it</a><br><a href="https://hexed.it/">https://hexed.it/</a></p>
-</blockquote>
-<p><strong>步骤：</strong></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">1、打开文件：找到 Xshell 或 Xftp 安装目录下的.exe文件，然后打开</span><br><span class="line"></span><br><span class="line">2、搜索替换：根据 Xshell 或 Xftp 分别搜索替换</span><br><span class="line">Xshell：搜索 74 11 6A 00 6A 07 6A 01 替换为 EB 11 6A 00 6A 07 6A 01</span><br><span class="line">Xftp：搜索 75 10 6A 00 6A 07 50 6A 替换为 EB 10 6A 00 6A 07 50 6A</span><br><span class="line"></span><br><span class="line">先输入搜索的内容，然后查找下一个，找到后，输入替换为的内容，最后点击替换。</span><br><span class="line"></span><br><span class="line">3、另存为：将修改后的文件另存到原来安装的目录，替换原有的.exe文件</span><br><span class="line"></span><br><span class="line">操作后，重新启动软件，会提示是否允许运行，点击仍要允许（刚开始可能会有点慢），</span><br><span class="line">再关闭后就发现没有弹窗提示了，完美解决。</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>xshell</category>
-      </categories>
-      <tags>
-        <tag>工具</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>mongodb的查询指令find的简单应用</title>
-    <url>/2023/08/10/mongodb%E7%9A%84%E6%9F%A5%E8%AF%A2%E6%8C%87%E4%BB%A4find%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/</url>
-    <content><![CDATA[<h2 id="简单查找全部"><a href="#简单查找全部" class="headerlink" title="简单查找全部"></a>简单查找全部</h2><blockquote>
-<p>查询全部条数</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find() / db.find(&#123;&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="字段条件简单查找"><a href="#字段条件简单查找" class="headerlink" title="字段条件简单查找"></a>字段条件简单查找</h2><blockquote>
-<p>条件查找age为10的字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:10&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="字段的筛选"><a href="#字段的筛选" class="headerlink" title="字段的筛选"></a>字段的筛选</h2><blockquote>
-<p>查找全部条数，并且值保留age字段，会自带_id字段，因为数据库的默认添加</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>去掉_id字段，只保留age字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;_id:0,age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>过滤掉age与sex字段，保留剩余字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:0,sex:0&#125;) </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>只保留age与sex字段</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1,sex:1&#125;) </span><br></pre></td></tr></table></figure>
-
-<p><strong>注意，除了_id字段之外，其余字段不可以在有字段为1的情况下设置为0</strong></p>
-<h2 id="条件查找"><a href="#条件查找" class="headerlink" title="条件查找"></a>条件查找</h2><blockquote>
-<p><strong>符号</strong></p>
-<p>gt  大于<br>lt 小于<br>gte 大于等于<br>lte 小于等于</p>
-</blockquote>
-<blockquote>
-<p>查找当前文档中age字段大于等于20的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$gte</span>:20&#125;&#125;) </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>查找文档中age字段小于20的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$lt</span>:20&#125;&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="多条件查找"><a href="#多条件查找" class="headerlink" title="多条件查找"></a>多条件查找</h2><p><strong>符号</strong></p>
-<p><strong>and 且 (他用于模糊条件且)</strong></p>
-<blockquote>
-<p>查询文档中age字段大于5且age字段小于20的信息</p>
-<p>语法 $and:[条件1,条件2,…]</p>
-<p>他是直接查询符合数组所有条件的信息</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;<span class="variable">$and</span>:[&#123;age:&#123;<span class="variable">$gte</span>:5&#125;&#125;,&#123;age:&#123;<span class="variable">$lte</span>:20&#125;&#125;]&#125;)</span><br></pre></td></tr></table></figure>
-
-<p><strong>$in 存在</strong></p>
-<blockquote>
-<p>他用于精准匹配值，类似枚举</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;age:&#123;<span class="variable">$in</span>:[1,2,3,5,7]&#125;&#125;)</span><br></pre></td></tr></table></figure>
-
-<p><strong>$or 或</strong></p>
-<blockquote>
-<p>db.user.find({KaTeX parse error: Expected ‘}’, got ‘EOF’ at end of input: or:[{age:{lte:5}},{age:{$gte:10}}]})</p>
-<p>只要符合给定条件中的一个，就匹配成功</p>
-</blockquote>
-<p><strong>regex 正则查找</strong></p>
-<p>db.user.find({name:&#x2F;3&#x2F;i}) 正则查找name字段中含有’3’的字符串</p>
-<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><blockquote>
-<p>根据字段对信息进行排序</p>
-<p>要先查找到数据在进行排序操作，根据age字段进行升序排序，-1为降序排序。</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">sort</span>(&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
-
-<h2 id="跳过与查找个数"><a href="#跳过与查找个数" class="headerlink" title="跳过与查找个数"></a>跳过与查找个数</h2><p><strong>count 数量</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().count()</span><br></pre></td></tr></table></figure>
-
-<p><strong>skip 跳过</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().skip(4)</span><br></pre></td></tr></table></figure>
-
-<p><strong>limit 查找信息数量</strong></p>
-<blockquote>
-<p>它规定只查找几条</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">limit</span>(3)</span><br></pre></td></tr></table></figure>
-
-<h2 id="查找信息自增"><a href="#查找信息自增" class="headerlink" title="查找信息自增"></a>查找信息自增</h2><p><strong>$inc 字段自增</strong></p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.updateOne(&#123;name:<span class="string">&#x27;ceshi10&#x27;</span>&#125;,&#123;<span class="variable">$inc</span>:&#123;age:1&#125;&#125;) 查询到信息，age字段随着每次更新自增</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>mongodb</category>
-      </categories>
-      <tags>
-        <tag>数据库</tag>
       </tags>
   </entry>
   <entry>
@@ -597,6 +511,25 @@
       </tags>
   </entry>
   <entry>
+    <title>docker-compose之v1.x与v2.x说明</title>
+    <url>/2023/07/29/docker-compose%E4%B9%8Bv1.x%E4%B8%8Ev2.x%E8%AF%B4%E6%98%8E/</url>
+    <content><![CDATA[<h3 id="题外：centos-7-修改本地语言（解决中文显示异常乱码）"><a href="#题外：centos-7-修改本地语言（解决中文显示异常乱码）" class="headerlink" title="题外：centos 7 修改本地语言（解决中文显示异常乱码）"></a>题外：centos 7 修改本地语言（解决中文显示异常乱码）</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">centos7没有这个文件 /etc/sysconfig/i18n</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">locale ：查看当前系统的语言类型</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">lcoale -a ： 查看 当前系统所支持的所有语言类型！</span></span><br><span class="line">1、查看当前编码格式：</span><br><span class="line">root@localhost:~# locale</span><br><span class="line">LANG=en_US.UTF-8</span><br><span class="line">LC_CTYPE=&quot;en_US.UTF-8&quot;</span><br><span class="line">LC_NUMERIC=&quot;en_US.UTF-8&quot;</span><br><span class="line">...</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">或者</span></span><br><span class="line">root@localhost:~# echo $LANG</span><br><span class="line">en_US.UTF-8</span><br><span class="line"></span><br><span class="line">2、临时修改：(只是临时的，当重新打开一个终端即失效！)</span><br><span class="line">root@localhost:~# LANG=&quot;zh_CN.UTF-8&quot;</span><br><span class="line">root@localhost:~# echo $LANG</span><br><span class="line">zh_CN.UTF-8</span><br><span class="line"></span><br><span class="line">3、永久修改：</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Centos 系统 ： /etc/locale.conf</span> </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Ubuntu 系统 ： /etc/locale.gen</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">题外：</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看你的 /etc/profile.d/lang.sh 文件</span></span><br><span class="line"> 11   for langfile in /etc/locale.conf &quot;$HOME/.i18n&quot; ; do</span><br><span class="line"> 12         [ -f $langfile ] &amp;&amp; . $langfile &amp;&amp; sourced=1</span><br><span class="line"> 13     done</span><br><span class="line">：set nu</span><br><span class="line">看见没 ，上面有个路径 &quot;/etc/locale.conf&quot;  这个就是相当于 &quot;/etc/sysconfig/i18n&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">## 修改 /etc/locale.conf</span></span></span><br><span class="line">root@localhost:~# sed -ri &quot;s/LANG=en_US.UTF-8/LANG=zh_CN.UTF-8/&quot; /etc/locale.conf</span><br><span class="line">root@localhost:~# source /etc/locale.conf</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">## 检查</span></span></span><br><span class="line">root@localhost:~# echo &quot;哈喽&quot;</span><br><span class="line">哈喽</span><br></pre></td></tr></table></figure>
+<h3 id="一、docker-compose-v1-x"><a href="#一、docker-compose-v1-x" class="headerlink" title="一、docker-compose v1.x"></a>一、docker-compose v1.x</h3><h5 id="1、docker-compose1-x-是相对独立的命令，命令行方式如：docker-compose-–version"><a href="#1、docker-compose1-x-是相对独立的命令，命令行方式如：docker-compose-–version" class="headerlink" title="1、docker compose1.x 是相对独立的命令，命令行方式如：docker-compose –version"></a>1、docker compose1.x 是相对独立的命令，命令行方式如：docker-compose –version</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载docker-compose</span></span><br><span class="line">curl -kL https://github.com/docker/compose/releases/download/v1.25.4/docker-compose-`uname -s`-`uname -m` &gt; /usr/local/bin/docker-compose</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加入执行权限</span></span><br><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">添加环境</span></span><br><span class="line">cat &gt;&gt; /etc/profile &lt; EOF</span><br><span class="line">export $PATH=$PATH:/usr/local/bin</span><br><span class="line">EOF</span><br><span class="line">source /etc/profile</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看docker-compose版本</span></span><br><span class="line">docker-compose -v</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">离线下载</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">到github release中下载我们的docker-compose</span></span><br><span class="line">https://github.com/docker/compose/releases</span><br></pre></td></tr></table></figure>
+<h3 id="二、docker-compose-v2-x"><a href="#二、docker-compose-v2-x" class="headerlink" title="二、docker-compose v2.x"></a>二、docker-compose v2.x</h3><h5 id="1、docker-compose-v2-被规划为Docker-CLI的一部分，命令行方式如docker-compose-version"><a href="#1、docker-compose-v2-被规划为Docker-CLI的一部分，命令行方式如docker-compose-version" class="headerlink" title="1、docker compose v2 被规划为Docker CLI的一部分，命令行方式如docker compose version"></a>1、docker compose v2 被规划为Docker CLI的一部分，命令行方式如docker compose version</h5><ul>
+<li><strong>注意docker与compose之间是空格，不是中横线；version 作为一个命令存在，而不是参数</strong></li>
+<li>在Mac和windows操作系统中，docker compose已经是docker CLI的一部分，也就是在安装docker的时候，就具备了执行docker compose的能力。</li>
+<li>在linux版本下，需要我们来安装一下，安装过程其实是差不多的。<strong>注意的是必须安装到指定的目录下，才能被Docker CLI识别，以Docker CLI命令模式运行。</strong><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">法一：命令是：docker-compose，安装类似v1.x</span><br><span class="line"></span><br><span class="line">法二：命令是：docker compose</span><br><span class="line">mkdir -p ~/.docker/cli-plugins</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载docker-compose</span></span><br><span class="line">curl -kL https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-`uname -s`-`uname -m` &gt; ~/.docker/cli-plugins/docker-compose</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加入执行权限</span></span><br><span class="line">chmod +x ~/.docker/cli-plugins/docker-compose</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看版本</span></span><br><span class="line">docker compose version</span><br></pre></td></tr></table></figure>
+<!-- <meta http-equiv="refresh" content="2"> --></li>
+</ul>
+]]></content>
+      <categories>
+        <category>docker compose</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>k8s 1.26.2基于containerd1.6.18</title>
     <url>/2023/07/29/k8s%201.26.2%E5%9F%BA%E4%BA%8Econtainerd1.6.18/</url>
     <content><![CDATA[<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>服务器参数：</p>
@@ -673,6 +606,333 @@
 <!-- <meta http-equiv="refresh" content="2"> -->]]></content>
       <categories>
         <category>kubernetes-k8s部署</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>pyenv的安装与简单使用</title>
+    <url>/2023/11/14/pyenv%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<p>官网：<a href="https://github.com/pyenv/pyenv#unixmacos">https://github.com/pyenv/pyenv#unixmacos</a></p>
+<p><a href="https://github.com/pyenv/pyenv-update">https://github.com/pyenv/pyenv-update</a></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">### linux安装</span><br><span class="line"></span><br><span class="line"># curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash</span><br><span class="line"></span><br><span class="line">git clone https://github.com/pyenv/pyenv.git ~/.pyenv</span><br><span class="line">cd ~/.pyenv &amp;&amp; src/configure &amp;&amp; make -C src</span><br><span class="line"></span><br><span class="line">echo &#x27;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">echo &#x27;command -v pyenv &gt;/dev/null || export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">echo &#x27;eval &quot;$(pyenv init -)&quot;&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">source ~/.bashrc</span><br><span class="line"></span><br><span class="line">git clone https://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="一、pyenv是什么？"><a href="#一、pyenv是什么？" class="headerlink" title="一、pyenv是什么？"></a>一、pyenv是什么？</h3><p><code>pyenv</code> 是 <code>python</code> 的 <code>多环境管理</code> 工具，可以安装多个版本的 python，并为 <code>全局</code> 或 <code>单个应用</code> 设置指定版本</p>
+<h3 id="二、pyenv的安装"><a href="#二、pyenv的安装" class="headerlink" title="二、pyenv的安装"></a>二、pyenv的安装</h3><h4 id="2-1-下载-pyenv-压缩包"><a href="#2-1-下载-pyenv-压缩包" class="headerlink" title="2.1 下载 pyenv 压缩包"></a>2.1 下载 pyenv 压缩包</h4><p>压缩包下载地址：<a href="https://github.com/pyenv-win/pyenv-win#readme">https://github.com/pyenv-win/pyenv-win#readme</a><br>点击 <code>code</code>，再点击 <code>Download ZIP</code> 下载压缩包</p>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/b307c723145a4b348383261e7a8a1f2d.png" alt="在这里插入图片描述"></p>
+<h4 id="2-2-解压压缩包"><a href="#2-2-解压压缩包" class="headerlink" title="2.2 解压压缩包"></a>2.2 解压压缩包</h4><p>将 <code>pyenv-win</code> 压缩包解压到任意不带有中文的目录下，并点击箭头处复制目录路径<br>（这里有一点需要注意：需要复制文件夹内部的pyenv-win所在的目录，而不是外层目录）<br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/c6a2f88e04624cd084cc71faf917bd5b.jpeg" alt="在这里插入图片描述"></p>
+<h4 id="2-3-配置环境变量"><a href="#2-3-配置环境变量" class="headerlink" title="2.3 配置环境变量"></a>2.3 配置环境变量</h4><h5 id="2-3-1-电脑搜索框内输入-“高级系统设置”，打开后，点击-环境变量"><a href="#2-3-1-电脑搜索框内输入-“高级系统设置”，打开后，点击-环境变量" class="headerlink" title="2.3.1 电脑搜索框内输入 “高级系统设置”，打开后，点击 环境变量"></a>2.3.1 电脑搜索框内输入 “高级系统设置”，打开后，点击 <code>环境变量</code></h5><p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/0cfdae48704048969f78a06822fcaf3d.png" alt="在这里插入图片描述"></p>
+<h5 id="2-3-2-在-系统变量-中点-新建-，将-PYENV-加入系统变量中，并配置上一步拷贝的目录，点击确认"><a href="#2-3-2-在-系统变量-中点-新建-，将-PYENV-加入系统变量中，并配置上一步拷贝的目录，点击确认" class="headerlink" title="2.3.2 在 系统变量 中点 新建 ，将 PYENV 加入系统变量中，并配置上一步拷贝的目录，点击确认"></a>2.3.2 在 <code>系统变量</code> 中点 <code>新建</code> ，将 <code>PYENV</code> 加入系统变量中，并配置上一步拷贝的目录，点击确认</h5><p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/9c510ffb4da3453385377099e2f28d1c.png" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/5aef9da66d994b11a7ab8bca4162b9ac.png" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/4093862dced7490e80f84436609bbddb.png" alt="在这里插入图片描述"></p>
+<h5 id="2-3-3-配置-path-变量"><a href="#2-3-3-配置-path-变量" class="headerlink" title="2.3.3 配置 path 变量"></a>2.3.3 配置 <code>path</code> 变量</h5><p>在系统变量中找到 <code>Path</code> 这个变量，双击打开</p>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/4ce029a5cebe444a831a44e447854e07.png" alt="在这里插入图片描述"></p>
+<p>点击<code>新建</code> ，将这两行路径加进去：<code>%PYENV%\bin</code> 、<code>%PYENV%\shims</code> ，再点击确定</p>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/6855a99777f34a8c80904c16ffa867c3.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/ba97f06b08284e528741fcfc071bede9.png" alt="在这里插入图片描述"></p>
+<p>然后一层一层点击 <code>确定</code> 就好了</p>
+<h4 id="2-4-检测是否安装成功"><a href="#2-4-检测是否安装成功" class="headerlink" title="2.4 检测是否安装成功"></a>2.4 检测是否安装成功</h4><p>在 <code>cmd</code> 窗口输入 <code>pyenv</code>，显示版本号等信息就是成功了</p>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/52ad69cf7ac0447a90a40c77c4d539f9.png" alt="在这里插入图片描述"></p>
+<h3 id="三、pyenv-的基本使用"><a href="#三、pyenv-的基本使用" class="headerlink" title="三、pyenv 的基本使用"></a>三、pyenv 的基本使用</h3><h4 id="3-1-列出所有可以使用的版本"><a href="#3-1-列出所有可以使用的版本" class="headerlink" title="3.1 列出所有可以使用的版本"></a>3.1 列出所有可以使用的版本</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv install --list </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/e97952169ab34666b285a87bddf56577.png" alt="在这里插入图片描述"></p>
+<h4 id="3-2-查看版本"><a href="#3-2-查看版本" class="headerlink" title="3.2 查看版本"></a>3.2 查看版本</h4><h5 id="3-2-1-列出所有已安装的版本，当前使用版本带"><a href="#3-2-1-列出所有已安装的版本，当前使用版本带" class="headerlink" title="3.2.1 列出所有已安装的版本，当前使用版本带 &quot;*&quot;"></a>3.2.1 列出所有已安装的版本，当前使用版本带 <code>&quot;*&quot;</code></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv versions </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/5d18a7b8812e441488dd5d0df13e56be.png" alt="在这里插入图片描述"></p>
+<h5 id="3-2-2-直接查看当前对应版本"><a href="#3-2-2-直接查看当前对应版本" class="headerlink" title="3.2.2 直接查看当前对应版本"></a>3.2.2 直接查看当前对应版本</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv version </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/8398bf55beb1455582312c01ab9e6473.png" alt="![在这里插入图片描述](https://img-blog.csdnimg.cn/f7d6549f27d84f2aba693a8d79d1b0f3.png"></p>
+<h4 id="3-3-安装指定版本"><a href="#3-3-安装指定版本" class="headerlink" title="3.3 安装指定版本"></a>3.3 安装指定版本</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv install &lt;version&gt; </span><br></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/f08d123bb9f74d9abb7b494b5882af12.png" alt="在这里插入图片描述"><br>有时候会出现下载很慢的情况，这时候可以参考以下方案</p>
+<h5 id="3-3-1-手动安装"><a href="#3-3-1-手动安装" class="headerlink" title="3.3.1 手动安装"></a>3.3.1 手动安装</h5><p>上图中可以看出下载源为 <code>Mirror: https://www.python.org/ftp/python</code></p>
+<ul>
+<li>可以手动打开这个源地址，找到要下的版本号，找到需要的文件（以 3.10.3-amd64.exe 为例）</li>
+<li>将它下载完直接拖进 pyenv 的 <code>install_cache</code> 文件夹</li>
+<li>再执行上面的安装命令，即可安装对应的版本</li>
+</ul>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/a01d27f224704cd1a862f6653aa5ec0a.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/7adbe2be7d0f4c5b994c51362bdd3a51.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/ccd23e5c01d541219f57cc7685f5675e.png" alt="在这里插入图片描述"></p>
+<p>正常安装的执行过程：</p>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/03497978db0b45d2a30474a66f3f5f4d.png" alt="在这里插入图片描述"></p>
+<p>手动安装的执行过程：</p>
+<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/33e636339256426b9895f797df5371c8.png" alt="在这里插入图片描述"></p>
+<p>从上面两张图也可以看出，安装的过程是先到 <code>源地址</code> 下载文件，丢进 <code>install_cache</code> 内，再进行 <code>安装</code><br>我们相当于手动操作前面，直接进行安装</p>
+<h4 id="3-4-卸载指定版本"><a href="#3-4-卸载指定版本" class="headerlink" title="3.4 卸载指定版本"></a>3.4 卸载指定版本</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv uninstall &lt;version&gt; </span><br></pre></td></tr></table></figure>
+
+<h4 id="3-5-设置全局-当前版本"><a href="#3-5-设置全局-当前版本" class="headerlink" title="3.5 设置全局&#x2F;当前版本"></a>3.5 设置全局&#x2F;当前版本</h4><p>设置全局版本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv global &lt;version&gt; </span><br></pre></td></tr></table></figure>
+
+<p>设置当前版本</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv local &lt;version&gt; </span><br></pre></td></tr></table></figure>
+
+<p>设置之后，可以查看 python 版本来核对</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python -V </span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>python - pynev</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>mongodb的查询指令find的简单应用</title>
+    <url>/2023/08/10/mongodb%E7%9A%84%E6%9F%A5%E8%AF%A2%E6%8C%87%E4%BB%A4find%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8/</url>
+    <content><![CDATA[<h2 id="简单查找全部"><a href="#简单查找全部" class="headerlink" title="简单查找全部"></a>简单查找全部</h2><blockquote>
+<p>查询全部条数</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find() / db.find(&#123;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="字段条件简单查找"><a href="#字段条件简单查找" class="headerlink" title="字段条件简单查找"></a>字段条件简单查找</h2><blockquote>
+<p>条件查找age为10的字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:10&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="字段的筛选"><a href="#字段的筛选" class="headerlink" title="字段的筛选"></a>字段的筛选</h2><blockquote>
+<p>查找全部条数，并且值保留age字段，会自带_id字段，因为数据库的默认添加</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>去掉_id字段，只保留age字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;_id:0,age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>过滤掉age与sex字段，保留剩余字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:0,sex:0&#125;) </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>只保留age与sex字段</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;&#125;,&#123;age:1,sex:1&#125;) </span><br></pre></td></tr></table></figure>
+
+<p><strong>注意，除了_id字段之外，其余字段不可以在有字段为1的情况下设置为0</strong></p>
+<h2 id="条件查找"><a href="#条件查找" class="headerlink" title="条件查找"></a>条件查找</h2><blockquote>
+<p><strong>符号</strong></p>
+<p>gt  大于<br>lt 小于<br>gte 大于等于<br>lte 小于等于</p>
+</blockquote>
+<blockquote>
+<p>查找当前文档中age字段大于等于20的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$gte</span>:20&#125;&#125;) </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>查找文档中age字段小于20的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.find(&#123;age:&#123;<span class="variable">$lt</span>:20&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="多条件查找"><a href="#多条件查找" class="headerlink" title="多条件查找"></a>多条件查找</h2><p><strong>符号</strong></p>
+<p><strong>and 且 (他用于模糊条件且)</strong></p>
+<blockquote>
+<p>查询文档中age字段大于5且age字段小于20的信息</p>
+<p>语法 $and:[条件1,条件2,…]</p>
+<p>他是直接查询符合数组所有条件的信息</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;<span class="variable">$and</span>:[&#123;age:&#123;<span class="variable">$gte</span>:5&#125;&#125;,&#123;age:&#123;<span class="variable">$lte</span>:20&#125;&#125;]&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>$in 存在</strong></p>
+<blockquote>
+<p>他用于精准匹配值，类似枚举</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find(&#123;age:&#123;<span class="variable">$in</span>:[1,2,3,5,7]&#125;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>$or 或</strong></p>
+<blockquote>
+<p>db.user.find({KaTeX parse error: Expected ‘}’, got ‘EOF’ at end of input: or:[{age:{lte:5}},{age:{$gte:10}}]})</p>
+<p>只要符合给定条件中的一个，就匹配成功</p>
+</blockquote>
+<p><strong>regex 正则查找</strong></p>
+<p>db.user.find({name:&#x2F;3&#x2F;i}) 正则查找name字段中含有’3’的字符串</p>
+<h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><blockquote>
+<p>根据字段对信息进行排序</p>
+<p>要先查找到数据在进行排序操作，根据age字段进行升序排序，-1为降序排序。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">sort</span>(&#123;age:1&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="跳过与查找个数"><a href="#跳过与查找个数" class="headerlink" title="跳过与查找个数"></a>跳过与查找个数</h2><p><strong>count 数量</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().count()</span><br></pre></td></tr></table></figure>
+
+<p><strong>skip 跳过</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().skip(4)</span><br></pre></td></tr></table></figure>
+
+<p><strong>limit 查找信息数量</strong></p>
+<blockquote>
+<p>它规定只查找几条</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.find().<span class="built_in">limit</span>(3)</span><br></pre></td></tr></table></figure>
+
+<h2 id="查找信息自增"><a href="#查找信息自增" class="headerlink" title="查找信息自增"></a>查找信息自增</h2><p><strong>$inc 字段自增</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">db.user.updateOne(&#123;name:<span class="string">&#x27;ceshi10&#x27;</span>&#125;,&#123;<span class="variable">$inc</span>:&#123;age:1&#125;&#125;) 查询到信息，age字段随着每次更新自增</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>mongodb</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vsftp之docker版</title>
+    <url>/2023/08/24/vsftp%E4%B9%8Bdocker%E7%89%88/</url>
+    <content><![CDATA[<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>服务器参数：</p>
+<ul>
+<li>CentOS Linux release 7.9.2009 (Core)</li>
+<li>4核（vCPU）8GB</li>
+</ul>
+<p>防火墙：关闭<br>SELINUX：SELINUX&#x3D;disabled<br>软件环境：</p>
+<ul>
+<li>docker版本：20.10.22</li>
+<li>docker-compose版本：2.15.1</li>
+<li><strong>本文用户和密码均为：test123456，使用时请修改，注意安全！！！</strong></li>
+</ul>
+<h3 id="一、vsftp"><a href="#一、vsftp" class="headerlink" title="一、vsftp"></a>一、vsftp</h3><h5 id="1、创建目录"><a href="#1、创建目录" class="headerlink" title="1、创建目录"></a>1、创建目录</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">本次操作路径为：/root/service_yaml/ftp_share</span></span><br><span class="line">cd /root/service_yaml/ftp_share</span><br><span class="line">mkdir -p data</span><br></pre></td></tr></table></figure>
+
+<h5 id="2、vsftp-share-yml"><a href="#2、vsftp-share-yml" class="headerlink" title="2、vsftp-share.yml"></a>2、vsftp-share.yml</h5><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">vsftp-share.yml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">version:</span> <span class="string">&quot;3&quot;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">   <span class="attr">ftp-share:</span></span><br><span class="line">     <span class="attr">image:</span> <span class="string">fauria/vsftpd</span></span><br><span class="line">     <span class="attr">ports:</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&quot;0.0.0.0:20:20&quot;</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&quot;0.0.0.0:21:21&quot;</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&quot;8800:8800&quot;</span></span><br><span class="line">     <span class="attr">environment:</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">FTP_USER=test123456</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">FTP_PASS=test123456</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">PASV_ENABLE=YES</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">PASV_ADDRESS=127.0.0.1</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">PASV_MIN_PORT=8800</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">PASV_MAX_PORT=8800</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">ANON_ENABLE=NO</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">NO_ANON_PASSWD=NO</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">ANON_ROOT=/var/ftp</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">LOCAL_ENABLE=YES</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">ANONYMOUS_ENABLE=NO</span></span><br><span class="line">     <span class="attr">volumes:</span></span><br><span class="line">       <span class="comment"># 此处的/home/vsftpd/admin 中的admin需要和FTP_USER的值保持一致</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">./data:/home/vsftpd/admin</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">/usr/share/zoneinfo/Etc/GMT-8:/etc/localtime</span></span><br><span class="line">     <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">     <span class="attr">container_name:</span> <span class="string">ftp-share</span></span><br><span class="line">     <span class="attr">networks:</span></span><br><span class="line">       <span class="attr">ftp:</span></span><br><span class="line">         <span class="attr">aliases:</span></span><br><span class="line">           <span class="bullet">-</span> <span class="string">ftp-share</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">   <span class="attr">ftp:</span></span><br><span class="line">     <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<h5 id="2、启动-vsftp-share-yml"><a href="#2、启动-vsftp-share-yml" class="headerlink" title="2、启动 vsftp-share.yml"></a>2、启动 vsftp-share.yml</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载docker-compose</span></span><br><span class="line">curl -kL https://github.com/docker/compose/releases/download/v1.25.4/docker-compose-`<span class="built_in">uname</span> -s`-`<span class="built_in">uname</span> -m` &gt; /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># 加入执行权限</span></span><br><span class="line">sudo <span class="built_in">chmod</span> +x /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># 查看docker-compose版本</span></span><br><span class="line">docker-compose -v</span><br><span class="line"><span class="comment"># 离线下载</span></span><br><span class="line"><span class="comment"># 到github release中下载我们的docker-compose</span></span><br><span class="line">https://github.com/docker/compose/releases</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">docker-compose -f vsftp-share.yml up -d</span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">docker-compose -f vsftp-share.yml down</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">docker-compose -f vsftp-share.yml ps</span><br><span class="line"><span class="comment"># 日志</span></span><br><span class="line">docker-compose -f vsftp-share.yml logs</span><br></pre></td></tr></table></figure>
+
+<h5 id="3、一条命令完事"><a href="#3、一条命令完事" class="headerlink" title="3、一条命令完事"></a>3、一条命令完事</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/service_yaml/ftp_share</span><br><span class="line"></span><br><span class="line">docker run -dit --name ftp-share \</span><br><span class="line">-p 20:20 -p 21:21 -p 8800:8800 \</span><br><span class="line">-v ./data:/home/vsftpd/admin \</span><br><span class="line">-v /usr/share/zoneinfo/Etc/GMT-8:/etc/localtime \</span><br><span class="line">-e FTP_USER=test123456 \</span><br><span class="line">-e FTP_PASS=test123456 \</span><br><span class="line">-e PASV_ENABLE=YES \</span><br><span class="line">-e PASV_ADDRESS=127.0.0.1 \</span><br><span class="line">-e PASV_MIN_PORT=8800 \</span><br><span class="line">-e PASV_MAX_PORT=8800 \</span><br><span class="line">-e ANON_ENABLE=NO \</span><br><span class="line">-e NO_ANON_PASSWD=NO \</span><br><span class="line">-e ANON_ROOT=/var/ftp \</span><br><span class="line">-e LOCAL_ENABLE=YES \</span><br><span class="line">-e ANONYMOUS_ENABLE=NO \</span><br><span class="line">fauria/vsftpd</span><br></pre></td></tr></table></figure>
+
+<h5 id="访问："><a href="#访问：" class="headerlink" title="访问："></a>访问：</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ftp://47.102.47.151/</span><br></pre></td></tr></table></figure>
+<h3 id="二、nginx-vsftp版"><a href="#二、nginx-vsftp版" class="headerlink" title="二、nginx-vsftp版"></a>二、nginx-vsftp版</h3><h5 id="1、创建目录-1"><a href="#1、创建目录-1" class="headerlink" title="1、创建目录"></a>1、创建目录</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 本次操作路径为：/root/service_yaml/ftp_share</span></span><br><span class="line"><span class="built_in">cd</span> /root/service_yaml/ftp_share</span><br><span class="line"><span class="built_in">mkdir</span> -p data nginx/conf.d <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<h5 id="2、创建-nginx-配置文件：nginx-nginx-conf"><a href="#2、创建-nginx-配置文件：nginx-nginx-conf" class="headerlink" title="2、创建 nginx 配置文件：nginx&#x2F;nginx.conf"></a>2、创建 nginx 配置文件：nginx&#x2F;nginx.conf</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; nginx/nginx.conf &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">user root;</span></span><br><span class="line"><span class="string">worker_processes auto;</span></span><br><span class="line"><span class="string">error_log /var/log/nginx/error.log;</span></span><br><span class="line"><span class="string">pid /var/run/nginx.pid;</span></span><br><span class="line"><span class="string">include /usr/share/nginx/modules/*.conf;</span></span><br><span class="line"><span class="string">events &#123;</span></span><br><span class="line"><span class="string">    worker_connections 1024;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">http &#123;</span></span><br><span class="line"><span class="string">    log_format  main  &#x27;\$remote_addr - \$remote_user [\$time_local] &quot;\$request&quot; &#x27;</span></span><br><span class="line"><span class="string">                      &#x27;\$status \$body_bytes_sent &quot;\$http_referer&quot; &#x27;</span></span><br><span class="line"><span class="string">                      &#x27;&quot;\$http_user_agent&quot; &quot;\$http_x_forwarded_for&quot;&#x27;;</span></span><br><span class="line"><span class="string">    access_log  /var/log/nginx/access.log  main;</span></span><br><span class="line"><span class="string">    sendfile            on;</span></span><br><span class="line"><span class="string">    tcp_nopush          on;</span></span><br><span class="line"><span class="string">    tcp_nodelay         on;</span></span><br><span class="line"><span class="string">    keepalive_timeout   65;</span></span><br><span class="line"><span class="string">    types_hash_max_size 2048;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    default_type        application/octet-stream;</span></span><br><span class="line"><span class="string">    # Load modular configuration files from the /etc/nginx/conf.d directory.</span></span><br><span class="line"><span class="string">    # See http://nginx.org/en/docs/ngx_core_module.html#include</span></span><br><span class="line"><span class="string">    # for more information.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    include /etc/nginx/conf.d/*.conf;</span></span><br><span class="line"><span class="string">    server &#123;</span></span><br><span class="line"><span class="string">        listen 80;</span></span><br><span class="line"><span class="string">        server_name  _;</span></span><br><span class="line"><span class="string">        root    /usr/share/nginx/html/download;</span></span><br><span class="line"><span class="string">        # Load configuration files for the default server block.</span></span><br><span class="line"><span class="string">        include /etc/nginx/default.d/*.conf;</span></span><br><span class="line"><span class="string">        # limit_rate 50k;# 限制下载速度</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        location / &#123;</span></span><br><span class="line"><span class="string">          auth_basic &quot;登陆验证&quot;;</span></span><br><span class="line"><span class="string">          auth_basic_user_file /usr/local/nginx/htpasswd;</span></span><br><span class="line"><span class="string">          autoindex on;    #开启索引功能</span></span><br><span class="line"><span class="string">          autoindex_exact_size off;  #关闭计算文件确切大小（单位bytes），只显示大概大小（单位kb、mb、gb）</span></span><br><span class="line"><span class="string">          autoindex_localtime on;   #显示本机时间而非 GMT 时间</span></span><br><span class="line"><span class="string">          charset utf-8,gbk;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        error_page 404 /404.html;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        location = /40x.html &#123;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        error_page 500 502 503 504 /50x.html;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        location = /50x.html &#123;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<h5 id="3、创建-nginx-htpasswd"><a href="#3、创建-nginx-htpasswd" class="headerlink" title="3、创建 nginx&#x2F;htpasswd"></a>3、创建 nginx&#x2F;htpasswd</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1、法1：</span><br><span class="line">yum -y install httpd-devel</span><br><span class="line">htpasswd -cm nginx/htpasswd test123456</span><br><span class="line"><span class="comment"># 输入两次密码：例如：test123456</span></span><br><span class="line"></span><br><span class="line">2、法2：</span><br><span class="line"><span class="built_in">printf</span> <span class="string">&quot;test123456:<span class="subst">$(openssl passwd -crypt test123456)</span>\n&quot;</span> &gt;&gt; nginx/htpasswd</span><br><span class="line"><span class="built_in">cat</span> nginx/htpasswd</span><br></pre></td></tr></table></figure>
+<h5 id="4、nginx-vsftp-share-yml"><a href="#4、nginx-vsftp-share-yml" class="headerlink" title="4、nginx-vsftp-share.yml"></a>4、nginx-vsftp-share.yml</h5><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">nginx-vsftp-share.yml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">ftp-nginx:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:1.21.6-alpine</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">ftp-nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;80:80&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/home/sharefiles:/usr/share/nginx/html/download</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/conf.d:/etc/nginx/conf.d</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/nginx.conf:/etc/nginx/nginx.conf</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/htpasswd:/usr/local/nginx/htpasswd</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./log:/var/log/nginx</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/usr/share/zoneinfo/Etc/GMT-8:/etc/localtime</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="attr">ftp:</span></span><br><span class="line">        <span class="attr">aliases:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">nginx-share</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">ftp-share:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">fauria/vsftpd</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">ftp-share</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">FTP_USER=test123456</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">FTP_PASS=test123456</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASV_ENABLE=YES</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASV_ADDRESS=127.0.0.1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASV_MIN_PORT=8800</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASV_MAX_PORT=8800</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ANON_ENABLE=NO</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">NO_ANON_PASSWD=NO</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ANON_ROOT=/var/ftp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">LOCAL_ENABLE=YES</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ANONYMOUS_ENABLE=NO</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="comment"># 此处的/home/vsftpd/test123456 中的test123456需要和FTP_USER的值保持一致</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/home/sharefiles:/home/vsftpd/test123456</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/usr/share/zoneinfo/Etc/GMT-8:/etc/localtime</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;20:20&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;21:21&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8800:8800&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="attr">ftp:</span></span><br><span class="line">        <span class="attr">aliases:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">ftp-share</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">   <span class="attr">ftp:</span></span><br><span class="line">     <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+<h5 id="5、启动-nginx-vsftp-share-yml"><a href="#5、启动-nginx-vsftp-share-yml" class="headerlink" title="5、启动 nginx-vsftp-share.yml"></a>5、启动 nginx-vsftp-share.yml</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载docker-compose</span></span><br><span class="line">curl -kL https://github.com/docker/compose/releases/download/2.15.1/docker-compose-`<span class="built_in">uname</span> -s`-`<span class="built_in">uname</span> -m` &gt; /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># 加入执行权限</span></span><br><span class="line">sudo <span class="built_in">chmod</span> +x /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># 查看docker-compose版本</span></span><br><span class="line">docker-compose -v</span><br><span class="line"><span class="comment"># 离线下载</span></span><br><span class="line"><span class="comment"># 到github release中下载我们的docker-compose</span></span><br><span class="line">https://github.com/docker/compose/releases</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">docker-compose -f nginx-vsftp-share.yml up -d</span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">docker-compose -f nginx-vsftp-share.yml down</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">docker-compose -f nginx-vsftp-share.yml ps</span><br><span class="line"><span class="comment"># 日志</span></span><br><span class="line">docker-compose -f nginx-vsftp-share.yml logs</span><br></pre></td></tr></table></figure>
+<h5 id="6、一条命令完事"><a href="#6、一条命令完事" class="headerlink" title="6、一条命令完事"></a>6、一条命令完事</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1、vsftp</span><br><span class="line"><span class="built_in">cd</span> /root/service_yaml/ftp_share</span><br><span class="line"></span><br><span class="line">docker run -dit --name ftp-share \</span><br><span class="line">-p 20:20 -p 21:21 -p 8800:8800 \</span><br><span class="line">-v ./data:/home/vsftpd/test123456 \</span><br><span class="line">-v /usr/share/zoneinfo/Etc/GMT-8:/etc/localtime \</span><br><span class="line">-e FTP_USER=test123456 \</span><br><span class="line">-e FTP_PASS=test123456 \</span><br><span class="line">-e PASV_ENABLE=YES \</span><br><span class="line">-e PASV_ADDRESS=127.0.0.1 \</span><br><span class="line">-e PASV_MIN_PORT=8800 \</span><br><span class="line">-e PASV_MAX_PORT=8800 \</span><br><span class="line">-e ANON_ENABLE=NO \</span><br><span class="line">-e NO_ANON_PASSWD=NO \</span><br><span class="line">-e ANON_ROOT=/var/ftp \</span><br><span class="line">-e LOCAL_ENABLE=YES \</span><br><span class="line">-e ANONYMOUS_ENABLE=NO \</span><br><span class="line">fauria/vsftpd</span><br><span class="line"></span><br><span class="line">2、nginx</span><br><span class="line"><span class="built_in">cd</span> /root/service_yaml/ftp_share</span><br><span class="line"></span><br><span class="line">docker run -dit --name ftp-nginx \</span><br><span class="line">-p 80:80 \</span><br><span class="line">-v ./data:/usr/share/nginx/html/download \</span><br><span class="line">-v ./nginx/conf.d:/etc/nginx/conf.d \</span><br><span class="line">-v ./nginx/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v ./nginx/htpasswd:/usr/local/nginx/htpasswd \</span><br><span class="line">-v ./log:/var/log/nginx \</span><br><span class="line">-v /usr/share/zoneinfo/Etc/GMT-8:/etc/localtime \</span><br><span class="line">nginx:1.21.6-alpine</span><br></pre></td></tr></table></figure>
+
+<h5 id="访问：-1"><a href="#访问：-1" class="headerlink" title="访问："></a>访问：</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ftp://47.102.47.151/</span><br><span class="line">http://47.102.47.151/</span><br><span class="line"></span><br><span class="line">用户/密码：test123456/test123456</span><br><span class="line"></span><br><span class="line">ftp://47.102.47.151/</span><br><span class="line">http://47.102.47.151/</span><br><span class="line">用户/密码：test123456/test123456</span><br></pre></td></tr></table></figure>
+<h3 id="三、客户端访问问题"><a href="#三、客户端访问问题" class="headerlink" title="三、客户端访问问题"></a>三、客户端访问问题</h3><h5 id="1、如遇到下面这个问题"><a href="#1、如遇到下面这个问题" class="headerlink" title="1、如遇到下面这个问题"></a>1、如遇到下面这个问题</h5><p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/vsftp%E4%B9%8Bdocker%E7%89%88/1692855182880.jpg" alt="https://gitee.com/j1447443432/blog_img/raw/master/img/vsftp之docker版/1692855182880.jpg"><br><strong>解决：</strong><br>设置Internet Explorer 开启ftp被动模式<br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/vsftp%E4%B9%8Bdocker%E7%89%88/1692855273194.jpg" alt="https://gitee.com/j1447443432/blog_img/raw/master/img/vsftp之docker版/1692855273194.jpg"></p>
+<h3 id="FAQs"><a href="#FAQs" class="headerlink" title="FAQs"></a>FAQs</h3><h5 id="1、ftp目录下可能出现木马文件（-scr文件或者-lnk文件）"><a href="#1、ftp目录下可能出现木马文件（-scr文件或者-lnk文件）" class="headerlink" title="1、ftp目录下可能出现木马文件（.scr文件或者.lnk文件）"></a>1、ftp目录下可能出现木马文件（.scr文件或者.lnk文件）</h5><ul>
+<li><p>清除脚本delete_lnk_scr.sh </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ftp&#x27;s dir</span></span><br><span class="line">path=<span class="string">&quot;/home/sharefiles&quot;</span></span><br><span class="line">key1=<span class="string">&quot;*.scr&quot;</span></span><br><span class="line">key2=<span class="string">&quot;*.lnk&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">start</span></span>()&#123;</span><br><span class="line">find <span class="variable">$&#123;path&#125;</span> -<span class="built_in">type</span> f -name <span class="variable">$&#123;key1&#125;</span> -<span class="built_in">print</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \</span><br><span class="line">find <span class="variable">$&#123;path&#125;</span> -<span class="built_in">type</span> f -name <span class="variable">$&#123;key2&#125;</span> -<span class="built_in">print</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># main</span></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">main</span></span>()&#123;</span><br><span class="line">	start</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># action</span></span><br><span class="line">main</span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>解决方法：</p>
+<blockquote>
+<p>关闭匿名认证</p>
+</blockquote>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">在ftp-share服务中environment添加</span><br><span class="line">      - LOCAL_ENABLE=YES</span><br><span class="line">      - ANONYMOUS_ENABLE=NO</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>运维</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>制作Ubuntu16.04离线apt源</title>
+    <url>/2023/08/08/%E5%88%B6%E4%BD%9CUbuntu16.04%E7%A6%BB%E7%BA%BFapt%E6%BA%90/</url>
+    <content><![CDATA[<h3 id="制作Ubuntu16-04离线apt源"><a href="#制作Ubuntu16-04离线apt源" class="headerlink" title="制作Ubuntu16.04离线apt源"></a>制作Ubuntu16.04离线apt源</h3><h4 id="1-下载离线安装包"><a href="#1-下载离线安装包" class="headerlink" title="1.下载离线安装包"></a>1.下载离线安装包</h4><blockquote>
+<p>ubuntu下安装包都会下载到&#x2F;var&#x2F;cache&#x2F;apt&#x2F;archives下，首先清空该目录</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get clean</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载需要安装包</span></span><br><span class="line">sudo apt-get install -d XX</span><br><span class="line"><span class="comment"># -d：代表只下载不安装，但是如果该机器上已经有该软件，则不会执行</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-安装dpkg-dev"><a href="#2-安装dpkg-dev" class="headerlink" title="2.安装dpkg-dev"></a>2.安装dpkg-dev</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install dpkg-dev</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-创建源目录"><a href="#3-创建源目录" class="headerlink" title="3.创建源目录"></a>3.创建源目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> /XX</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-拷贝离线包到源目录"><a href="#4-拷贝离线包到源目录" class="headerlink" title="4.拷贝离线包到源目录"></a>4.拷贝离线包到源目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> /var/cache/apt/archives/*.deb /XX</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-为离线安装包制作索引"><a href="#5-为离线安装包制作索引" class="headerlink" title="5.为离线安装包制作索引"></a>5.为离线安装包制作索引</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line">sudo dpkg-scanpackages XX/ |gzip &gt;XX/Packages.gz </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>运行完该命令后会在XX目录生成Packages.gz</p>
+</blockquote>
+<h4 id="6-将索引加入source-list"><a href="#6-将索引加入source-list" class="headerlink" title="6.将索引加入source.list"></a>6.将索引加入source.list</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> “deb file:/// XX/”&gt;&gt;/etc/apt/source.list</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-更新源"><a href="#7-更新源" class="headerlink" title="7.更新源"></a>7.更新源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-安装XX"><a href="#8-安装XX" class="headerlink" title="8.安装XX"></a>8.安装XX</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install XX</span><br></pre></td></tr></table></figure>
+
+<h4 id="9、其他"><a href="#9、其他" class="headerlink" title="9、其他"></a>9、其他</h4><ul>
+<li>apt-get install 连同诸多依赖包一并安装</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get install --install-suggests package</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果遇到个别包的版本兼容问题，具体如下</li>
+</ul>
+<blockquote>
+<p>Depends: XXX（&#x3D;YYY） but ZZZ is to be installed</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 例如：</span></span><br><span class="line">zlib1g (= 1:1.2.8.dfsg-2ubuntu4.3) but 1:1.2.11.dfsg-0ubuntu2 is to be installed</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决方法：</span></span><br><span class="line">apt-get install --reinstall zlib1g=1:1.2.8.dfsg-2ubuntu4.3</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>ubuntu/debian</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>别做低幼巨婴</title>
+    <url>/2023/07/31/%E5%88%AB%E5%81%9A%E4%BD%8E%E5%B9%BC%E5%B7%A8%E5%A9%B4/</url>
+    <content><![CDATA[<blockquote>
+<p>语雀分享：<a href="https://www.yuque.com/xiaojing-fftve/hmizug/bue4x79onupa02nk?singleDoc#">https://www.yuque.com/xiaojing-fftve/hmizug/bue4x79onupa02nk?singleDoc#</a> 《别做低幼巨婴》</p>
+</blockquote>
+<blockquote>
+<p><strong>摘抄自御术的分享，不代表我个人观点。</strong></p>
+</blockquote>
+<p><strong>推荐你读《奈飞文化手册》</strong></p>
+<blockquote>
+<p>别做低幼巨婴，当一个成年人，不要整天为面子、为伤害、为自己脆弱的玻璃心使劲。罗斯福夫人讲过一句话特别棒：这个世界上没有人能够伤害你，除非你同意。</p>
+<p>世间不公平，付出一定不会有绝对对等的收获，今天亏了明天赚了，只盯着眼前那一点点得失只会让自己永远停留在自设的狭小牢笼中痛苦挣扎。最近没人注意我，最近比较闲，我划会水。我做了那么多，居然「老板」没看到，我下次也不努力了。我明明比他厉害，为啥我得不到那样的待遇，给一分钱出一分力，对得住天地良心 … 这是我遇到的巨婴想法，是不是很形象？是不是你也有过？我想一定有，包括曾经的我也都会有过。但当我想明白一件事情之后就会觉得这些想法极其的低幼而可笑。</p>
+<p>世间可是极致的公平，每个人一生唯一拥有又无法拥有的只有时间，一切一切都是时间换来，用时间变现去换取更多时间，或者说时间变现让你的人生效率和质量变高，比如花时间变现为自己的能力是为了以后处理相同的事情可以花更小的时间，花时间变现为钱是让自己可以用钱去换时间（买房买车，住酒店坐飞机…），花时间变现为身体状态活得更久本质就是变现回更多的时间…</p>
+<p>我们每个人根本上都只是也只能对自己负责，刻在你身上的时钟启动后就只会停一次，你每时每刻花的一分一秒都是你自己的，这一分一秒的质量怎么样？变现成什么？全是你自己决定的！而每个人人生质量的差距就在这一分一秒的变现叠加中拉开，这是我理解「活着」的奥义，共勉之~</p>
+<p>推荐一部很形象的电影《时间规划局》</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>好文章摘要</category>
+      </categories>
+      <tags>
+        <tag>休闲阅读</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>MinIO客户端mc实现数据迁移_minio数据迁移</title>
+    <url>/2023/10/23/MinIO%E5%AE%A2%E6%88%B7%E7%AB%AFmc%E5%AE%9E%E7%8E%B0%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB_minio%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</url>
+    <content><![CDATA[<h3 id="一-概述"><a href="#一-概述" class="headerlink" title="一.概述"></a>一.概述</h3><p>mc 命令提供了一个方便管理 ~&#x2F;.mc&#x2F;config.json 配置文件中的主机信息的方式，你也可以用文本编辑器手动修改这个配置文件。<br>通过minio提供的客户端实现资源迁移，本文章的mc通过docker创建。<br>minio1的api地址是192.168.180.45:39000<br>minio2的api地址是192.168.180.37:39000</p>
+<h3 id="二-docker启动mc实例-并进入容器内部"><a href="#二-docker启动mc实例-并进入容器内部" class="headerlink" title="二.docker启动mc实例,并进入容器内部"></a>二.docker启动mc实例,并进入容器内部</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">docker run -it --entrypoint=/bin/sh minio/mc </span><br></pre></td></tr></table></figure>
+
+<h3 id="三-通过mc命令连接两个minio服务"><a href="#三-通过mc命令连接两个minio服务" class="headerlink" title="三.通过mc命令连接两个minio服务"></a>三.通过mc命令连接两个minio服务</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#查看cat ~/.mc/config.json里的配置</span><br><span class="line">mc config host ls</span><br><span class="line">#添加新的minio服务地址</span><br><span class="line">mc alias set 名称 服务地址 用户名 密码</span><br><span class="line">mc alias set minio1 http://192.168.180.45:39000 admin Qwe@1245</span><br><span class="line">mc alias set minio2 http://192.168.180.37:39000 admin Qwe@1245 </span><br></pre></td></tr></table></figure>
+
+<h3 id="四-迁移数据"><a href="#四-迁移数据" class="headerlink" title="四.迁移数据"></a>四.迁移数据</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#全量迁移,重名文件不覆盖,bucket不存在会自动创建</span><br><span class="line">mc mirror minio1 minio2</span><br><span class="line">#只是迁移某个bucket,以test为例,目标的bucket需要提前建好</span><br><span class="line">mc mirror minio1/test minio2/test</span><br><span class="line">#覆盖重名文件,加--overwrite</span><br><span class="line">mc mirror --overwrite minio1/test minio2/test </span><br></pre></td></tr></table></figure>
+
+<h3 id="五、其他命令"><a href="#五、其他命令" class="headerlink" title="五、其他命令"></a>五、其他命令</h3><p><strong><a href="http://docs.minio.org.cn/docs/master/minio-client-complete-guide"><code>mc命令详解</code></a></strong></p>
+<p>MinIO Client (mc)为ls，cat，cp，mirror，diff，find等UNIX命令提供了一种替代方案。它支持文件系统和兼容Amazon S3的云存储服务（AWS Signature v2和v4）。</p>
+<blockquote>
+<p>Copyls 列出文件和文件夹。<br>mb 创建一个存储桶或一个文件夹。<br>cat 显示文件和对象内容。<br>pipe 将一个STDIN重定向到一个对象或者文件或者STDOUT。<br>share 生成用于共享的URL。<br>cp 拷贝文件和对象。<br>mirror 给存储桶和文件夹做镜像。<br>find 基于参数查找文件。<br>diff 对两个文件夹或者存储桶比较差异。<br>rm 删除文件和对象。<br>events 管理对象通知。<br>watch 监听文件和对象的事件。<br>policy 管理访问策略。<br>session 为cp命令管理保存的会话。<br>config 管理mc配置文件。<br>update 检查软件更新。<br>version 输出版本信息。</p>
+</blockquote>
+<p><strong><code>获取集群信息</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 执行命令测试能否连通，如有文件或至少存在一个 Bucket，会在回显中列出：</span><br><span class="line">mc ls minio1</span><br><span class="line"></span><br><span class="line"># 执行命令获取集群数据大小，如果有文件或存在至少一个 Bucket，会在最后一行打印当前集群所有文件总大小：</span><br><span class="line">mc du minio1 </span><br></pre></td></tr></table></figure>
+
+<p><strong><code>对拷（镜像）</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#使用命令进行 Bucket 对拷,mc 无法实现集群全量对拷，单条命令只能逐个 Bucket 进行操作：</span><br><span class="line">mc mirror $SrcCluster/$srcBucket $DestCluster</span><br><span class="line">#例如：</span><br><span class="line">mc mirror clusterA/bucketa clusterB</span><br><span class="line">mc mirror 命令可以不指定 Dest 的 Bucket，如果 $DestCluster 不存在对应名称 Bucket，对拷过程中会自动创建。</span><br><span class="line"></span><br><span class="line">#若要实现不停机对拷，可以使用以下命令：</span><br><span class="line">mc mirror -w $srcCluster/Bucket $destCluster</span><br><span class="line">#-w 参数可以让 mirror 命令持续监控某一目录。由于 mirror 只能对拷单Bucket，如果使用 Shell 脚本进行for 轮询实现集群对拷时，一旦Bucket 过多，此命令可能会造成大量监控线程，增加负载。 </span><br></pre></td></tr></table></figure>
+
+<p><strong><code>检查是否完全结束</code></strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#使用命令检查是否有未完整传输的文件,如果有未传输完全的文件，会在回显中列出：</span><br><span class="line">mc ls --incomplete minio1</span><br><span class="line"></span><br><span class="line">#如果有必要，可以删除某个桶中的残缺文件：</span><br><span class="line">mc rm --incomplete $hostName/$bucket </span><br></pre></td></tr></table></figure>
+
+<h3 id="一些说明"><a href="#一些说明" class="headerlink" title="一些说明"></a>一些说明</h3><p>无需担心数据分片等问题，哪怕节点数量不对等。</p>
+<p>因为是直接从集群入口访问并获取数据，并不是 ”磁盘 to 磁盘“ 的迁移方式，某个节点上的某块磁盘究竟存的是纠删码还是分片的数据都没有关系，因为从集群地址中读出来的数据是完整的数据，这就是为什么要求一定要能获取到集群地址的原因。</p>
+<p>Bucket 在 MinIO 中应被视为 ”挂载目录“ (mount)，而不是 “磁盘目录” (mkdir)。</p>
+<p>mc cp 命令需要在目标集群拥有同名 Bucket，mc mirror 不需要，同时 mc mirror 会自动保存目录的层级信息，mc cp 需要额外指定 –recursive 参数，请根据需要酌情选择。</p>
+<p>mc mirror 的集群 to 集群、集群 to 本地用法并未在 官方文档 中列出，很可能属于 hack 用法，请注意可能存在的风险。</p>
+]]></content>
+      <categories>
+        <category>minio - mc命令</category>
       </categories>
       <tags>
         <tag>运维</tag>
@@ -999,266 +1259,6 @@
 ]]></content>
       <categories>
         <category>linux-工具</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>别做低幼巨婴</title>
-    <url>/2023/07/31/%E5%88%AB%E5%81%9A%E4%BD%8E%E5%B9%BC%E5%B7%A8%E5%A9%B4/</url>
-    <content><![CDATA[<blockquote>
-<p>语雀分享：<a href="https://www.yuque.com/xiaojing-fftve/hmizug/bue4x79onupa02nk?singleDoc#">https://www.yuque.com/xiaojing-fftve/hmizug/bue4x79onupa02nk?singleDoc#</a> 《别做低幼巨婴》</p>
-</blockquote>
-<blockquote>
-<p><strong>摘抄自御术的分享，不代表我个人观点。</strong></p>
-</blockquote>
-<p><strong>推荐你读《奈飞文化手册》</strong></p>
-<blockquote>
-<p>别做低幼巨婴，当一个成年人，不要整天为面子、为伤害、为自己脆弱的玻璃心使劲。罗斯福夫人讲过一句话特别棒：这个世界上没有人能够伤害你，除非你同意。</p>
-<p>世间不公平，付出一定不会有绝对对等的收获，今天亏了明天赚了，只盯着眼前那一点点得失只会让自己永远停留在自设的狭小牢笼中痛苦挣扎。最近没人注意我，最近比较闲，我划会水。我做了那么多，居然「老板」没看到，我下次也不努力了。我明明比他厉害，为啥我得不到那样的待遇，给一分钱出一分力，对得住天地良心 … 这是我遇到的巨婴想法，是不是很形象？是不是你也有过？我想一定有，包括曾经的我也都会有过。但当我想明白一件事情之后就会觉得这些想法极其的低幼而可笑。</p>
-<p>世间可是极致的公平，每个人一生唯一拥有又无法拥有的只有时间，一切一切都是时间换来，用时间变现去换取更多时间，或者说时间变现让你的人生效率和质量变高，比如花时间变现为自己的能力是为了以后处理相同的事情可以花更小的时间，花时间变现为钱是让自己可以用钱去换时间（买房买车，住酒店坐飞机…），花时间变现为身体状态活得更久本质就是变现回更多的时间…</p>
-<p>我们每个人根本上都只是也只能对自己负责，刻在你身上的时钟启动后就只会停一次，你每时每刻花的一分一秒都是你自己的，这一分一秒的质量怎么样？变现成什么？全是你自己决定的！而每个人人生质量的差距就在这一分一秒的变现叠加中拉开，这是我理解「活着」的奥义，共勉之~</p>
-<p>推荐一部很形象的电影《时间规划局》</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>好文章摘要</category>
-      </categories>
-      <tags>
-        <tag>休闲阅读</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>vsftp之docker版</title>
-    <url>/2023/08/24/vsftp%E4%B9%8Bdocker%E7%89%88/</url>
-    <content><![CDATA[<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>服务器参数：</p>
-<ul>
-<li>CentOS Linux release 7.9.2009 (Core)</li>
-<li>4核（vCPU）8GB</li>
-</ul>
-<p>防火墙：关闭<br>SELINUX：SELINUX&#x3D;disabled<br>软件环境：</p>
-<ul>
-<li>docker版本：20.10.22</li>
-<li>docker-compose版本：2.15.1</li>
-<li><strong>本文用户和密码均为：test123456，使用时请修改，注意安全！！！</strong></li>
-</ul>
-<h3 id="一、vsftp"><a href="#一、vsftp" class="headerlink" title="一、vsftp"></a>一、vsftp</h3><h5 id="1、创建目录"><a href="#1、创建目录" class="headerlink" title="1、创建目录"></a>1、创建目录</h5><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">本次操作路径为：/root/service_yaml/ftp_share</span></span><br><span class="line">cd /root/service_yaml/ftp_share</span><br><span class="line">mkdir -p data</span><br></pre></td></tr></table></figure>
-
-<h5 id="2、vsftp-share-yml"><a href="#2、vsftp-share-yml" class="headerlink" title="2、vsftp-share.yml"></a>2、vsftp-share.yml</h5><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">vsftp-share.yml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">version:</span> <span class="string">&quot;3&quot;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">   <span class="attr">ftp-share:</span></span><br><span class="line">     <span class="attr">image:</span> <span class="string">fauria/vsftpd</span></span><br><span class="line">     <span class="attr">ports:</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&quot;0.0.0.0:20:20&quot;</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&quot;0.0.0.0:21:21&quot;</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">&quot;8800:8800&quot;</span></span><br><span class="line">     <span class="attr">environment:</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">FTP_USER=test123456</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">FTP_PASS=test123456</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">PASV_ENABLE=YES</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">PASV_ADDRESS=127.0.0.1</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">PASV_MIN_PORT=8800</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">PASV_MAX_PORT=8800</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">ANON_ENABLE=NO</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">NO_ANON_PASSWD=NO</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">ANON_ROOT=/var/ftp</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">LOCAL_ENABLE=YES</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">ANONYMOUS_ENABLE=NO</span></span><br><span class="line">     <span class="attr">volumes:</span></span><br><span class="line">       <span class="comment"># 此处的/home/vsftpd/admin 中的admin需要和FTP_USER的值保持一致</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">./data:/home/vsftpd/admin</span></span><br><span class="line">       <span class="bullet">-</span> <span class="string">/usr/share/zoneinfo/Etc/GMT-8:/etc/localtime</span></span><br><span class="line">     <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">     <span class="attr">container_name:</span> <span class="string">ftp-share</span></span><br><span class="line">     <span class="attr">networks:</span></span><br><span class="line">       <span class="attr">ftp:</span></span><br><span class="line">         <span class="attr">aliases:</span></span><br><span class="line">           <span class="bullet">-</span> <span class="string">ftp-share</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">   <span class="attr">ftp:</span></span><br><span class="line">     <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-<h5 id="2、启动-vsftp-share-yml"><a href="#2、启动-vsftp-share-yml" class="headerlink" title="2、启动 vsftp-share.yml"></a>2、启动 vsftp-share.yml</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载docker-compose</span></span><br><span class="line">curl -kL https://github.com/docker/compose/releases/download/v1.25.4/docker-compose-`<span class="built_in">uname</span> -s`-`<span class="built_in">uname</span> -m` &gt; /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># 加入执行权限</span></span><br><span class="line">sudo <span class="built_in">chmod</span> +x /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># 查看docker-compose版本</span></span><br><span class="line">docker-compose -v</span><br><span class="line"><span class="comment"># 离线下载</span></span><br><span class="line"><span class="comment"># 到github release中下载我们的docker-compose</span></span><br><span class="line">https://github.com/docker/compose/releases</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">docker-compose -f vsftp-share.yml up -d</span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">docker-compose -f vsftp-share.yml down</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">docker-compose -f vsftp-share.yml ps</span><br><span class="line"><span class="comment"># 日志</span></span><br><span class="line">docker-compose -f vsftp-share.yml logs</span><br></pre></td></tr></table></figure>
-
-<h5 id="3、一条命令完事"><a href="#3、一条命令完事" class="headerlink" title="3、一条命令完事"></a>3、一条命令完事</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root/service_yaml/ftp_share</span><br><span class="line"></span><br><span class="line">docker run -dit --name ftp-share \</span><br><span class="line">-p 20:20 -p 21:21 -p 8800:8800 \</span><br><span class="line">-v ./data:/home/vsftpd/admin \</span><br><span class="line">-v /usr/share/zoneinfo/Etc/GMT-8:/etc/localtime \</span><br><span class="line">-e FTP_USER=test123456 \</span><br><span class="line">-e FTP_PASS=test123456 \</span><br><span class="line">-e PASV_ENABLE=YES \</span><br><span class="line">-e PASV_ADDRESS=127.0.0.1 \</span><br><span class="line">-e PASV_MIN_PORT=8800 \</span><br><span class="line">-e PASV_MAX_PORT=8800 \</span><br><span class="line">-e ANON_ENABLE=NO \</span><br><span class="line">-e NO_ANON_PASSWD=NO \</span><br><span class="line">-e ANON_ROOT=/var/ftp \</span><br><span class="line">-e LOCAL_ENABLE=YES \</span><br><span class="line">-e ANONYMOUS_ENABLE=NO \</span><br><span class="line">fauria/vsftpd</span><br></pre></td></tr></table></figure>
-
-<h5 id="访问："><a href="#访问：" class="headerlink" title="访问："></a>访问：</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ftp://47.102.47.151/</span><br></pre></td></tr></table></figure>
-<h3 id="二、nginx-vsftp版"><a href="#二、nginx-vsftp版" class="headerlink" title="二、nginx-vsftp版"></a>二、nginx-vsftp版</h3><h5 id="1、创建目录-1"><a href="#1、创建目录-1" class="headerlink" title="1、创建目录"></a>1、创建目录</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 本次操作路径为：/root/service_yaml/ftp_share</span></span><br><span class="line"><span class="built_in">cd</span> /root/service_yaml/ftp_share</span><br><span class="line"><span class="built_in">mkdir</span> -p data nginx/conf.d <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
-<h5 id="2、创建-nginx-配置文件：nginx-nginx-conf"><a href="#2、创建-nginx-配置文件：nginx-nginx-conf" class="headerlink" title="2、创建 nginx 配置文件：nginx&#x2F;nginx.conf"></a>2、创建 nginx 配置文件：nginx&#x2F;nginx.conf</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> &gt; nginx/nginx.conf &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">user root;</span></span><br><span class="line"><span class="string">worker_processes auto;</span></span><br><span class="line"><span class="string">error_log /var/log/nginx/error.log;</span></span><br><span class="line"><span class="string">pid /var/run/nginx.pid;</span></span><br><span class="line"><span class="string">include /usr/share/nginx/modules/*.conf;</span></span><br><span class="line"><span class="string">events &#123;</span></span><br><span class="line"><span class="string">    worker_connections 1024;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">http &#123;</span></span><br><span class="line"><span class="string">    log_format  main  &#x27;\$remote_addr - \$remote_user [\$time_local] &quot;\$request&quot; &#x27;</span></span><br><span class="line"><span class="string">                      &#x27;\$status \$body_bytes_sent &quot;\$http_referer&quot; &#x27;</span></span><br><span class="line"><span class="string">                      &#x27;&quot;\$http_user_agent&quot; &quot;\$http_x_forwarded_for&quot;&#x27;;</span></span><br><span class="line"><span class="string">    access_log  /var/log/nginx/access.log  main;</span></span><br><span class="line"><span class="string">    sendfile            on;</span></span><br><span class="line"><span class="string">    tcp_nopush          on;</span></span><br><span class="line"><span class="string">    tcp_nodelay         on;</span></span><br><span class="line"><span class="string">    keepalive_timeout   65;</span></span><br><span class="line"><span class="string">    types_hash_max_size 2048;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    default_type        application/octet-stream;</span></span><br><span class="line"><span class="string">    # Load modular configuration files from the /etc/nginx/conf.d directory.</span></span><br><span class="line"><span class="string">    # See http://nginx.org/en/docs/ngx_core_module.html#include</span></span><br><span class="line"><span class="string">    # for more information.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    include /etc/nginx/conf.d/*.conf;</span></span><br><span class="line"><span class="string">    server &#123;</span></span><br><span class="line"><span class="string">        listen 80;</span></span><br><span class="line"><span class="string">        server_name  _;</span></span><br><span class="line"><span class="string">        root    /usr/share/nginx/html/download;</span></span><br><span class="line"><span class="string">        # Load configuration files for the default server block.</span></span><br><span class="line"><span class="string">        include /etc/nginx/default.d/*.conf;</span></span><br><span class="line"><span class="string">        # limit_rate 50k;# 限制下载速度</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        location / &#123;</span></span><br><span class="line"><span class="string">          auth_basic &quot;登陆验证&quot;;</span></span><br><span class="line"><span class="string">          auth_basic_user_file /usr/local/nginx/htpasswd;</span></span><br><span class="line"><span class="string">          autoindex on;    #开启索引功能</span></span><br><span class="line"><span class="string">          autoindex_exact_size off;  #关闭计算文件确切大小（单位bytes），只显示大概大小（单位kb、mb、gb）</span></span><br><span class="line"><span class="string">          autoindex_localtime on;   #显示本机时间而非 GMT 时间</span></span><br><span class="line"><span class="string">          charset utf-8,gbk;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        error_page 404 /404.html;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        location = /40x.html &#123;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        error_page 500 502 503 504 /50x.html;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        location = /50x.html &#123;</span></span><br><span class="line"><span class="string">        &#125;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-<h5 id="3、创建-nginx-htpasswd"><a href="#3、创建-nginx-htpasswd" class="headerlink" title="3、创建 nginx&#x2F;htpasswd"></a>3、创建 nginx&#x2F;htpasswd</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1、法1：</span><br><span class="line">yum -y install httpd-devel</span><br><span class="line">htpasswd -cm nginx/htpasswd test123456</span><br><span class="line"><span class="comment"># 输入两次密码：例如：test123456</span></span><br><span class="line"></span><br><span class="line">2、法2：</span><br><span class="line"><span class="built_in">printf</span> <span class="string">&quot;test123456:<span class="subst">$(openssl passwd -crypt test123456)</span>\n&quot;</span> &gt;&gt; nginx/htpasswd</span><br><span class="line"><span class="built_in">cat</span> nginx/htpasswd</span><br></pre></td></tr></table></figure>
-<h5 id="4、nginx-vsftp-share-yml"><a href="#4、nginx-vsftp-share-yml" class="headerlink" title="4、nginx-vsftp-share.yml"></a>4、nginx-vsftp-share.yml</h5><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">nginx-vsftp-share.yml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3&#x27;</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">ftp-nginx:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">nginx:1.21.6-alpine</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">ftp-nginx</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;80:80&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/home/sharefiles:/usr/share/nginx/html/download</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/conf.d:/etc/nginx/conf.d</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/nginx.conf:/etc/nginx/nginx.conf</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./nginx/htpasswd:/usr/local/nginx/htpasswd</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./log:/var/log/nginx</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/usr/share/zoneinfo/Etc/GMT-8:/etc/localtime</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="attr">ftp:</span></span><br><span class="line">        <span class="attr">aliases:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">nginx-share</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">ftp-share:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">fauria/vsftpd</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">ftp-share</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">FTP_USER=test123456</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">FTP_PASS=test123456</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASV_ENABLE=YES</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASV_ADDRESS=127.0.0.1</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASV_MIN_PORT=8800</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">PASV_MAX_PORT=8800</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ANON_ENABLE=NO</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">NO_ANON_PASSWD=NO</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ANON_ROOT=/var/ftp</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">LOCAL_ENABLE=YES</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">ANONYMOUS_ENABLE=NO</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="comment"># 此处的/home/vsftpd/test123456 中的test123456需要和FTP_USER的值保持一致</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/home/sharefiles:/home/vsftpd/test123456</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/usr/share/zoneinfo/Etc/GMT-8:/etc/localtime</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;20:20&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;21:21&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8800:8800&quot;</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">    <span class="attr">networks:</span></span><br><span class="line">      <span class="attr">ftp:</span></span><br><span class="line">        <span class="attr">aliases:</span></span><br><span class="line">          <span class="bullet">-</span> <span class="string">ftp-share</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line">   <span class="attr">ftp:</span></span><br><span class="line">     <span class="attr">driver:</span> <span class="string">bridge</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-<h5 id="5、启动-nginx-vsftp-share-yml"><a href="#5、启动-nginx-vsftp-share-yml" class="headerlink" title="5、启动 nginx-vsftp-share.yml"></a>5、启动 nginx-vsftp-share.yml</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载docker-compose</span></span><br><span class="line">curl -kL https://github.com/docker/compose/releases/download/2.15.1/docker-compose-`<span class="built_in">uname</span> -s`-`<span class="built_in">uname</span> -m` &gt; /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># 加入执行权限</span></span><br><span class="line">sudo <span class="built_in">chmod</span> +x /usr/local/bin/docker-compose</span><br><span class="line"><span class="comment"># 查看docker-compose版本</span></span><br><span class="line">docker-compose -v</span><br><span class="line"><span class="comment"># 离线下载</span></span><br><span class="line"><span class="comment"># 到github release中下载我们的docker-compose</span></span><br><span class="line">https://github.com/docker/compose/releases</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动</span></span><br><span class="line">docker-compose -f nginx-vsftp-share.yml up -d</span><br><span class="line"><span class="comment"># 关闭</span></span><br><span class="line">docker-compose -f nginx-vsftp-share.yml down</span><br><span class="line"><span class="comment"># 查看</span></span><br><span class="line">docker-compose -f nginx-vsftp-share.yml ps</span><br><span class="line"><span class="comment"># 日志</span></span><br><span class="line">docker-compose -f nginx-vsftp-share.yml logs</span><br></pre></td></tr></table></figure>
-<h5 id="6、一条命令完事"><a href="#6、一条命令完事" class="headerlink" title="6、一条命令完事"></a>6、一条命令完事</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1、vsftp</span><br><span class="line"><span class="built_in">cd</span> /root/service_yaml/ftp_share</span><br><span class="line"></span><br><span class="line">docker run -dit --name ftp-share \</span><br><span class="line">-p 20:20 -p 21:21 -p 8800:8800 \</span><br><span class="line">-v ./data:/home/vsftpd/test123456 \</span><br><span class="line">-v /usr/share/zoneinfo/Etc/GMT-8:/etc/localtime \</span><br><span class="line">-e FTP_USER=test123456 \</span><br><span class="line">-e FTP_PASS=test123456 \</span><br><span class="line">-e PASV_ENABLE=YES \</span><br><span class="line">-e PASV_ADDRESS=127.0.0.1 \</span><br><span class="line">-e PASV_MIN_PORT=8800 \</span><br><span class="line">-e PASV_MAX_PORT=8800 \</span><br><span class="line">-e ANON_ENABLE=NO \</span><br><span class="line">-e NO_ANON_PASSWD=NO \</span><br><span class="line">-e ANON_ROOT=/var/ftp \</span><br><span class="line">-e LOCAL_ENABLE=YES \</span><br><span class="line">-e ANONYMOUS_ENABLE=NO \</span><br><span class="line">fauria/vsftpd</span><br><span class="line"></span><br><span class="line">2、nginx</span><br><span class="line"><span class="built_in">cd</span> /root/service_yaml/ftp_share</span><br><span class="line"></span><br><span class="line">docker run -dit --name ftp-nginx \</span><br><span class="line">-p 80:80 \</span><br><span class="line">-v ./data:/usr/share/nginx/html/download \</span><br><span class="line">-v ./nginx/conf.d:/etc/nginx/conf.d \</span><br><span class="line">-v ./nginx/nginx.conf:/etc/nginx/nginx.conf \</span><br><span class="line">-v ./nginx/htpasswd:/usr/local/nginx/htpasswd \</span><br><span class="line">-v ./log:/var/log/nginx \</span><br><span class="line">-v /usr/share/zoneinfo/Etc/GMT-8:/etc/localtime \</span><br><span class="line">nginx:1.21.6-alpine</span><br></pre></td></tr></table></figure>
-
-<h5 id="访问：-1"><a href="#访问：-1" class="headerlink" title="访问："></a>访问：</h5><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ftp://47.102.47.151/</span><br><span class="line">http://47.102.47.151/</span><br><span class="line"></span><br><span class="line">用户/密码：test123456/test123456</span><br><span class="line"></span><br><span class="line">ftp://47.102.47.151/</span><br><span class="line">http://47.102.47.151/</span><br><span class="line">用户/密码：test123456/test123456</span><br></pre></td></tr></table></figure>
-<h3 id="三、客户端访问问题"><a href="#三、客户端访问问题" class="headerlink" title="三、客户端访问问题"></a>三、客户端访问问题</h3><h5 id="1、如遇到下面这个问题"><a href="#1、如遇到下面这个问题" class="headerlink" title="1、如遇到下面这个问题"></a>1、如遇到下面这个问题</h5><p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/vsftp%E4%B9%8Bdocker%E7%89%88/1692855182880.jpg" alt="https://gitee.com/j1447443432/blog_img/raw/master/img/vsftp之docker版/1692855182880.jpg"><br><strong>解决：</strong><br>设置Internet Explorer 开启ftp被动模式<br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/vsftp%E4%B9%8Bdocker%E7%89%88/1692855273194.jpg" alt="https://gitee.com/j1447443432/blog_img/raw/master/img/vsftp之docker版/1692855273194.jpg"></p>
-<h3 id="FAQs"><a href="#FAQs" class="headerlink" title="FAQs"></a>FAQs</h3><h5 id="1、ftp目录下可能出现木马文件（-scr文件或者-lnk文件）"><a href="#1、ftp目录下可能出现木马文件（-scr文件或者-lnk文件）" class="headerlink" title="1、ftp目录下可能出现木马文件（.scr文件或者.lnk文件）"></a>1、ftp目录下可能出现木马文件（.scr文件或者.lnk文件）</h5><ul>
-<li><p>清除脚本delete_lnk_scr.sh </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ftp&#x27;s dir</span></span><br><span class="line">path=<span class="string">&quot;/home/sharefiles&quot;</span></span><br><span class="line">key1=<span class="string">&quot;*.scr&quot;</span></span><br><span class="line">key2=<span class="string">&quot;*.lnk&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">start</span></span>()&#123;</span><br><span class="line">find <span class="variable">$&#123;path&#125;</span> -<span class="built_in">type</span> f -name <span class="variable">$&#123;key1&#125;</span> -<span class="built_in">print</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \</span><br><span class="line">find <span class="variable">$&#123;path&#125;</span> -<span class="built_in">type</span> f -name <span class="variable">$&#123;key2&#125;</span> -<span class="built_in">print</span> -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># main</span></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">main</span></span>()&#123;</span><br><span class="line">	start</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># action</span></span><br><span class="line">main</span><br></pre></td></tr></table></figure>
-
-</li>
-<li><p>解决方法：</p>
-<blockquote>
-<p>关闭匿名认证</p>
-</blockquote>
-</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">在ftp-share服务中environment添加</span><br><span class="line">      - LOCAL_ENABLE=YES</span><br><span class="line">      - ANONYMOUS_ENABLE=NO</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>运维</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>k8s中使用nfs创建storageClass</title>
-    <url>/2023/10/23/k8s%E4%B8%AD%E4%BD%BF%E7%94%A8nfs%E5%88%9B%E5%BB%BAstorageClass/</url>
-    <content><![CDATA[<h1 id="k8s中使用nfs创建storageClass"><a href="#k8s中使用nfs创建storageClass" class="headerlink" title="k8s中使用nfs创建storageClass"></a>k8s中使用nfs创建storageClass</h1><p>k8s环境配置</p>
-<table>
-<thead>
-<tr>
-<th>服务器</th>
-<th>角色</th>
-<th>版本</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>11.0.1.10</td>
-<td>master</td>
-<td>v1.24.0</td>
-</tr>
-<tr>
-<td>11.0.1.11</td>
-<td>worker</td>
-<td>v1.24.0</td>
-</tr>
-<tr>
-<td>11.0.1.12</td>
-<td>worker</td>
-<td>v1.24.0</td>
-</tr>
-<tr>
-<td>11.0.1.13</td>
-<td>nfs</td>
-<td></td>
-</tr>
-</tbody></table>
-<h3 id="安装nfs服务器"><a href="#安装nfs服务器" class="headerlink" title="安装nfs服务器"></a>安装nfs服务器</h3><p>11.0.1.13</p>
-<p>安装nfs服务</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install -y nfs-utils </span><br></pre></td></tr></table></figure>
-
-<p>配置nfs &#x2F;etc&#x2F;exports</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/nfs *(rw,<span class="built_in">sync</span>) </span><br></pre></td></tr></table></figure>
-
-<p>设置目录权限777</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">chmod</span> 777 /nfs </span><br></pre></td></tr></table></figure>
-
-<p>重启服务</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl restart nfs </span><br></pre></td></tr></table></figure>
-
-<p>在其他服务器上也要安装nfs-utils</p>
-<h3 id="在k8s中安装nfs组件"><a href="#在k8s中安装nfs组件" class="headerlink" title="在k8s中安装nfs组件"></a>在k8s中安装nfs组件</h3><p>NFS subdir external provisioner 是一个存储资源自动调配器，它可用将现有的 NFS 服务器通过持久卷声明来支持 Kubernetes 持久卷的动态分配</p>
-<p>组件地址：<a href="https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/deploy">https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/tree/master/deploy</a></p>
-<h4 id="创建rabc-yaml"><a href="#创建rabc-yaml" class="headerlink" title="创建rabc.yaml"></a>创建rabc.yaml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">rabc.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">  <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client-provisioner-runner</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;nodes&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;persistentvolumes&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>, <span class="string">&quot;create&quot;</span>, <span class="string">&quot;delete&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;persistentvolumeclaims&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>, <span class="string">&quot;update&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;storage.k8s.io&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;storageclasses&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>]</span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;events&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;create&quot;</span>, <span class="string">&quot;update&quot;</span>, <span class="string">&quot;patch&quot;</span>]</span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">run-nfs-client-provisioner</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">    <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client-provisioner-runner</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line">  <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">apiGroups:</span> [<span class="string">&quot;&quot;</span>]</span><br><span class="line">    <span class="attr">resources:</span> [<span class="string">&quot;endpoints&quot;</span>]</span><br><span class="line">    <span class="attr">verbs:</span> [<span class="string">&quot;get&quot;</span>, <span class="string">&quot;list&quot;</span>, <span class="string">&quot;watch&quot;</span>, <span class="string">&quot;create&quot;</span>, <span class="string">&quot;update&quot;</span>, <span class="string">&quot;patch&quot;</span>]</span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">RoleBinding</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line">  <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line">    <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">    <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">    <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line">  <span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line">  <span class="attr">apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl apply -f rabc.yaml </span><br></pre></td></tr></table></figure>
-
-<h4 id="创建deployment-provisioner-yaml"><a href="#创建deployment-provisioner-yaml" class="headerlink" title="创建deployment-provisioner.yaml"></a>创建deployment-provisioner.yaml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">deployment-provisioner.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">  <span class="attr">labels:</span></span><br><span class="line">    <span class="attr">app:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">  <span class="comment"># replace with namespace where provisioner is deployed</span></span><br><span class="line">  <span class="attr">namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">replicas:</span> <span class="number">1</span></span><br><span class="line">  <span class="attr">strategy:</span></span><br><span class="line">    <span class="attr">type:</span> <span class="string">Recreate</span></span><br><span class="line">  <span class="attr">selector:</span></span><br><span class="line">    <span class="attr">matchLabels:</span></span><br><span class="line">      <span class="attr">app:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">  <span class="attr">template:</span></span><br><span class="line">    <span class="attr">metadata:</span></span><br><span class="line">      <span class="attr">labels:</span></span><br><span class="line">        <span class="attr">app:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">    <span class="attr">spec:</span></span><br><span class="line">      <span class="attr">serviceAccountName:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">      <span class="attr">containers:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line">          <span class="comment"># 镜像地址国内访问不到，需要更换为其他地址</span></span><br><span class="line">          <span class="comment">#image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2</span></span><br><span class="line">          <span class="attr">image:</span> <span class="string">willdockerhub/nfs-subdir-external-provisioner:v4.0.2</span></span><br><span class="line">          <span class="attr">volumeMounts:</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-client-root</span></span><br><span class="line">              <span class="attr">mountPath:</span> <span class="string">/persistentvolumes</span></span><br><span class="line">          <span class="attr">env:</span></span><br><span class="line">              <span class="comment"># provisioner的名字，可以自定义，要和class.yaml中保持一致</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">PROVISIONER_NAME</span></span><br><span class="line">              <span class="attr">value:</span> <span class="string">k8s-sigs.io/nfs-subdir-external-provisioner</span></span><br><span class="line">              <span class="comment"># nfs服务器的地址</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NFS_SERVER</span></span><br><span class="line">              <span class="attr">value:</span> <span class="number">11.0</span><span class="number">.1</span><span class="number">.13</span></span><br><span class="line">              <span class="comment"># nfs共享的目录</span></span><br><span class="line">            <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">NFS_PATH</span></span><br><span class="line">              <span class="attr">value:</span> <span class="string">/nfs</span></span><br><span class="line">      <span class="attr">volumes:</span></span><br><span class="line">        <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-client-root</span></span><br><span class="line">          <span class="attr">nfs:</span></span><br><span class="line">            <span class="comment"># nfs服务器的地址</span></span><br><span class="line">            <span class="attr">server:</span> <span class="number">11.0</span><span class="number">.1</span><span class="number">.13</span></span><br><span class="line">            <span class="comment"># nfs共享的目录</span></span><br><span class="line">            <span class="attr">path:</span> <span class="string">/nfs</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl apply -f deployment-provisioner.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># kubectl get pod </span></span><br><span class="line">NAME                                      READY   STATUS    RESTARTS        AGE</span><br><span class="line">nfs-client-provisioner-5bd7d76d8f-nrcgj   1/1     Running   1 (4h48m ago)   20h </span><br></pre></td></tr></table></figure>
-
-<h4 id="创建storageclass-yaml"><a href="#创建storageclass-yaml" class="headerlink" title="创建storageclass.yaml"></a>创建storageclass.yaml</h4><figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">storageclass.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">storage.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StorageClass</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">nfs-client</span></span><br><span class="line"><span class="comment"># provisioner名称要和deployment里面定义的保持一致</span></span><br><span class="line"><span class="attr">provisioner:</span> <span class="string">k8s-sigs.io/nfs-subdir-external-provisioner</span> </span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line">  <span class="attr">archiveOnDelete:</span> <span class="string">&quot;false&quot;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">kubectl apply -f storageclass.yaml</span><br><span class="line"></span><br><span class="line"><span class="comment"># kubectl get storageclass</span></span><br><span class="line">NAME          PROVISIONER                                   RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE</span><br><span class="line">nfs-client    k8s-sigs.io/nfs-subdir-external-provisioner   Delete          Immediate           <span class="literal">false</span>                  2d2h </span><br></pre></td></tr></table></figure>
-
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>创建pvc</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">pvc-test.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-claim</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">storageClassName:</span> <span class="string">nfs-client</span></span><br><span class="line">  <span class="attr">accessModes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">ReadWriteMany</span></span><br><span class="line">  <span class="attr">resources:</span></span><br><span class="line">    <span class="attr">requests:</span></span><br><span class="line">      <span class="attr">storage:</span> <span class="string">1Mi</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-
-<p>创建pod，挂载pvc</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="string">cat</span> <span class="string">&gt;</span> <span class="string">pod-test.yaml</span> <span class="string">&lt;&lt;</span> <span class="string">EOF</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">test-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">containers:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">test-pod</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">busybox:stable</span></span><br><span class="line">    <span class="attr">command:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;/bin/sh&quot;</span></span><br><span class="line">    <span class="attr">args:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;-c&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;touch /mnt/SUCCESS &amp;&amp; exit 0 || exit 1&quot;</span></span><br><span class="line">    <span class="attr">volumeMounts:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-pvc</span></span><br><span class="line">        <span class="attr">mountPath:</span> <span class="string">&quot;/mnt&quot;</span></span><br><span class="line">  <span class="attr">restartPolicy:</span> <span class="string">&quot;Never&quot;</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">nfs-pvc</span></span><br><span class="line">      <span class="attr">persistentVolumeClaim:</span></span><br><span class="line">        <span class="attr">claimName:</span> <span class="string">test-claim</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>kubernetes-k8s存储storageClass</category>
-      </categories>
-      <tags>
-        <tag>运维</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>pyenv的安装与简单使用</title>
-    <url>/2023/11/14/pyenv%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8/</url>
-    <content><![CDATA[<p>官网：<a href="https://github.com/pyenv/pyenv#unixmacos">https://github.com/pyenv/pyenv#unixmacos</a></p>
-<p><a href="https://github.com/pyenv/pyenv-update">https://github.com/pyenv/pyenv-update</a></p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">### linux安装</span><br><span class="line"></span><br><span class="line"># curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash</span><br><span class="line"></span><br><span class="line">git clone https://github.com/pyenv/pyenv.git ~/.pyenv</span><br><span class="line">cd ~/.pyenv &amp;&amp; src/configure &amp;&amp; make -C src</span><br><span class="line"></span><br><span class="line">echo &#x27;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">echo &#x27;command -v pyenv &gt;/dev/null || export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">echo &#x27;eval &quot;$(pyenv init -)&quot;&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line">source ~/.bashrc</span><br><span class="line"></span><br><span class="line">git clone https://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="一、pyenv是什么？"><a href="#一、pyenv是什么？" class="headerlink" title="一、pyenv是什么？"></a>一、pyenv是什么？</h3><p><code>pyenv</code> 是 <code>python</code> 的 <code>多环境管理</code> 工具，可以安装多个版本的 python，并为 <code>全局</code> 或 <code>单个应用</code> 设置指定版本</p>
-<h3 id="二、pyenv的安装"><a href="#二、pyenv的安装" class="headerlink" title="二、pyenv的安装"></a>二、pyenv的安装</h3><h4 id="2-1-下载-pyenv-压缩包"><a href="#2-1-下载-pyenv-压缩包" class="headerlink" title="2.1 下载 pyenv 压缩包"></a>2.1 下载 pyenv 压缩包</h4><p>压缩包下载地址：<a href="https://github.com/pyenv-win/pyenv-win#readme">https://github.com/pyenv-win/pyenv-win#readme</a><br>点击 <code>code</code>，再点击 <code>Download ZIP</code> 下载压缩包</p>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/b307c723145a4b348383261e7a8a1f2d.png" alt="在这里插入图片描述"></p>
-<h4 id="2-2-解压压缩包"><a href="#2-2-解压压缩包" class="headerlink" title="2.2 解压压缩包"></a>2.2 解压压缩包</h4><p>将 <code>pyenv-win</code> 压缩包解压到任意不带有中文的目录下，并点击箭头处复制目录路径<br>（这里有一点需要注意：需要复制文件夹内部的pyenv-win所在的目录，而不是外层目录）<br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/c6a2f88e04624cd084cc71faf917bd5b.jpeg" alt="在这里插入图片描述"></p>
-<h4 id="2-3-配置环境变量"><a href="#2-3-配置环境变量" class="headerlink" title="2.3 配置环境变量"></a>2.3 配置环境变量</h4><h5 id="2-3-1-电脑搜索框内输入-“高级系统设置”，打开后，点击-环境变量"><a href="#2-3-1-电脑搜索框内输入-“高级系统设置”，打开后，点击-环境变量" class="headerlink" title="2.3.1 电脑搜索框内输入 “高级系统设置”，打开后，点击 环境变量"></a>2.3.1 电脑搜索框内输入 “高级系统设置”，打开后，点击 <code>环境变量</code></h5><p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/0cfdae48704048969f78a06822fcaf3d.png" alt="在这里插入图片描述"></p>
-<h5 id="2-3-2-在-系统变量-中点-新建-，将-PYENV-加入系统变量中，并配置上一步拷贝的目录，点击确认"><a href="#2-3-2-在-系统变量-中点-新建-，将-PYENV-加入系统变量中，并配置上一步拷贝的目录，点击确认" class="headerlink" title="2.3.2 在 系统变量 中点 新建 ，将 PYENV 加入系统变量中，并配置上一步拷贝的目录，点击确认"></a>2.3.2 在 <code>系统变量</code> 中点 <code>新建</code> ，将 <code>PYENV</code> 加入系统变量中，并配置上一步拷贝的目录，点击确认</h5><p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/9c510ffb4da3453385377099e2f28d1c.png" alt="在这里插入图片描述"></p>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/5aef9da66d994b11a7ab8bca4162b9ac.png" alt="在这里插入图片描述"></p>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/4093862dced7490e80f84436609bbddb.png" alt="在这里插入图片描述"></p>
-<h5 id="2-3-3-配置-path-变量"><a href="#2-3-3-配置-path-变量" class="headerlink" title="2.3.3 配置 path 变量"></a>2.3.3 配置 <code>path</code> 变量</h5><p>在系统变量中找到 <code>Path</code> 这个变量，双击打开</p>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/4ce029a5cebe444a831a44e447854e07.png" alt="在这里插入图片描述"></p>
-<p>点击<code>新建</code> ，将这两行路径加进去：<code>%PYENV%\bin</code> 、<code>%PYENV%\shims</code> ，再点击确定</p>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/6855a99777f34a8c80904c16ffa867c3.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/ba97f06b08284e528741fcfc071bede9.png" alt="在这里插入图片描述"></p>
-<p>然后一层一层点击 <code>确定</code> 就好了</p>
-<h4 id="2-4-检测是否安装成功"><a href="#2-4-检测是否安装成功" class="headerlink" title="2.4 检测是否安装成功"></a>2.4 检测是否安装成功</h4><p>在 <code>cmd</code> 窗口输入 <code>pyenv</code>，显示版本号等信息就是成功了</p>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/52ad69cf7ac0447a90a40c77c4d539f9.png" alt="在这里插入图片描述"></p>
-<h3 id="三、pyenv-的基本使用"><a href="#三、pyenv-的基本使用" class="headerlink" title="三、pyenv 的基本使用"></a>三、pyenv 的基本使用</h3><h4 id="3-1-列出所有可以使用的版本"><a href="#3-1-列出所有可以使用的版本" class="headerlink" title="3.1 列出所有可以使用的版本"></a>3.1 列出所有可以使用的版本</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv install --list </span><br></pre></td></tr></table></figure>
-
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/e97952169ab34666b285a87bddf56577.png" alt="在这里插入图片描述"></p>
-<h4 id="3-2-查看版本"><a href="#3-2-查看版本" class="headerlink" title="3.2 查看版本"></a>3.2 查看版本</h4><h5 id="3-2-1-列出所有已安装的版本，当前使用版本带"><a href="#3-2-1-列出所有已安装的版本，当前使用版本带" class="headerlink" title="3.2.1 列出所有已安装的版本，当前使用版本带 &quot;*&quot;"></a>3.2.1 列出所有已安装的版本，当前使用版本带 <code>&quot;*&quot;</code></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv versions </span><br></pre></td></tr></table></figure>
-
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/5d18a7b8812e441488dd5d0df13e56be.png" alt="在这里插入图片描述"></p>
-<h5 id="3-2-2-直接查看当前对应版本"><a href="#3-2-2-直接查看当前对应版本" class="headerlink" title="3.2.2 直接查看当前对应版本"></a>3.2.2 直接查看当前对应版本</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv version </span><br></pre></td></tr></table></figure>
-
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/8398bf55beb1455582312c01ab9e6473.png" alt="![在这里插入图片描述](https://img-blog.csdnimg.cn/f7d6549f27d84f2aba693a8d79d1b0f3.png"></p>
-<h4 id="3-3-安装指定版本"><a href="#3-3-安装指定版本" class="headerlink" title="3.3 安装指定版本"></a>3.3 安装指定版本</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv install &lt;version&gt; </span><br></pre></td></tr></table></figure>
-
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/f08d123bb9f74d9abb7b494b5882af12.png" alt="在这里插入图片描述"><br>有时候会出现下载很慢的情况，这时候可以参考以下方案</p>
-<h5 id="3-3-1-手动安装"><a href="#3-3-1-手动安装" class="headerlink" title="3.3.1 手动安装"></a>3.3.1 手动安装</h5><p>上图中可以看出下载源为 <code>Mirror: https://www.python.org/ftp/python</code></p>
-<ul>
-<li>可以手动打开这个源地址，找到要下的版本号，找到需要的文件（以 3.10.3-amd64.exe 为例）</li>
-<li>将它下载完直接拖进 pyenv 的 <code>install_cache</code> 文件夹</li>
-<li>再执行上面的安装命令，即可安装对应的版本</li>
-</ul>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/a01d27f224704cd1a862f6653aa5ec0a.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/7adbe2be7d0f4c5b994c51362bdd3a51.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/ccd23e5c01d541219f57cc7685f5675e.png" alt="在这里插入图片描述"></p>
-<p>正常安装的执行过程：</p>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/03497978db0b45d2a30474a66f3f5f4d.png" alt="在这里插入图片描述"></p>
-<p>手动安装的执行过程：</p>
-<p><img src="https://gitee.com/j1447443432/blog_img/raw/master/img/python/pyenv/33e636339256426b9895f797df5371c8.png" alt="在这里插入图片描述"></p>
-<p>从上面两张图也可以看出，安装的过程是先到 <code>源地址</code> 下载文件，丢进 <code>install_cache</code> 内，再进行 <code>安装</code><br>我们相当于手动操作前面，直接进行安装</p>
-<h4 id="3-4-卸载指定版本"><a href="#3-4-卸载指定版本" class="headerlink" title="3.4 卸载指定版本"></a>3.4 卸载指定版本</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv uninstall &lt;version&gt; </span><br></pre></td></tr></table></figure>
-
-<h4 id="3-5-设置全局-当前版本"><a href="#3-5-设置全局-当前版本" class="headerlink" title="3.5 设置全局&#x2F;当前版本"></a>3.5 设置全局&#x2F;当前版本</h4><p>设置全局版本</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv global &lt;version&gt; </span><br></pre></td></tr></table></figure>
-
-<p>设置当前版本</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pyenv local &lt;version&gt; </span><br></pre></td></tr></table></figure>
-
-<p>设置之后，可以查看 python 版本来核对</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">python -V </span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>python - pynev</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>制作Ubuntu16.04离线apt源</title>
-    <url>/2023/08/08/%E5%88%B6%E4%BD%9CUbuntu16.04%E7%A6%BB%E7%BA%BFapt%E6%BA%90/</url>
-    <content><![CDATA[<h3 id="制作Ubuntu16-04离线apt源"><a href="#制作Ubuntu16-04离线apt源" class="headerlink" title="制作Ubuntu16.04离线apt源"></a>制作Ubuntu16.04离线apt源</h3><h4 id="1-下载离线安装包"><a href="#1-下载离线安装包" class="headerlink" title="1.下载离线安装包"></a>1.下载离线安装包</h4><blockquote>
-<p>ubuntu下安装包都会下载到&#x2F;var&#x2F;cache&#x2F;apt&#x2F;archives下，首先清空该目录</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get clean</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载需要安装包</span></span><br><span class="line">sudo apt-get install -d XX</span><br><span class="line"><span class="comment"># -d：代表只下载不安装，但是如果该机器上已经有该软件，则不会执行</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="2-安装dpkg-dev"><a href="#2-安装dpkg-dev" class="headerlink" title="2.安装dpkg-dev"></a>2.安装dpkg-dev</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install dpkg-dev</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-创建源目录"><a href="#3-创建源目录" class="headerlink" title="3.创建源目录"></a>3.创建源目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">mkdir</span> /XX</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-拷贝离线包到源目录"><a href="#4-拷贝离线包到源目录" class="headerlink" title="4.拷贝离线包到源目录"></a>4.拷贝离线包到源目录</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo <span class="built_in">cp</span> /var/cache/apt/archives/*.deb /XX</span><br></pre></td></tr></table></figure>
-
-<h4 id="5-为离线安装包制作索引"><a href="#5-为离线安装包制作索引" class="headerlink" title="5.为离线安装包制作索引"></a>5.为离线安装包制作索引</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line">sudo dpkg-scanpackages XX/ |gzip &gt;XX/Packages.gz </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>运行完该命令后会在XX目录生成Packages.gz</p>
-</blockquote>
-<h4 id="6-将索引加入source-list"><a href="#6-将索引加入source-list" class="headerlink" title="6.将索引加入source.list"></a>6.将索引加入source.list</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">echo</span> “deb file:/// XX/”&gt;&gt;/etc/apt/source.list</span><br></pre></td></tr></table></figure>
-
-<h4 id="7-更新源"><a href="#7-更新源" class="headerlink" title="7.更新源"></a>7.更新源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
-
-<h4 id="8-安装XX"><a href="#8-安装XX" class="headerlink" title="8.安装XX"></a>8.安装XX</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install XX</span><br></pre></td></tr></table></figure>
-
-<h4 id="9、其他"><a href="#9、其他" class="headerlink" title="9、其他"></a>9、其他</h4><ul>
-<li>apt-get install 连同诸多依赖包一并安装</li>
-</ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get install --install-suggests package</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果遇到个别包的版本兼容问题，具体如下</li>
-</ul>
-<blockquote>
-<p>Depends: XXX（&#x3D;YYY） but ZZZ is to be installed</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 例如：</span></span><br><span class="line">zlib1g (= 1:1.2.8.dfsg-2ubuntu4.3) but 1:1.2.11.dfsg-0ubuntu2 is to be installed</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解决方法：</span></span><br><span class="line">apt-get install --reinstall zlib1g=1:1.2.8.dfsg-2ubuntu4.3</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>ubuntu/debian</category>
       </categories>
       <tags>
         <tag>linux</tag>
